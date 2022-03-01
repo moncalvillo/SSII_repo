@@ -34,16 +34,14 @@ public class ServerController {
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
     public Map<String,String> requestVerification(Item entity, BindingResult result, HttpServletRequest req, HttpServletResponse resp){
         Map<String, String> response = new HashMap<>();
+        response.put("hashFile", entity.getHashFile());
         if(entity.isValid() && serverService.verify(entity)){
-            
-            response.put("hashFile", entity.getHashFile());
             try {
                 response.put("mac", serverService.createMAC(entity.getHashFile(),req.getParameter("token"),challenge));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
         }else{
-            response.put("hashFile", entity.getHashFile());
             response.put("error", "Hash file not found");
         }
         return response;
