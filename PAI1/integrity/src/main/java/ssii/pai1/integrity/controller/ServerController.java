@@ -7,13 +7,11 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-
-import org.apache.catalina.connector.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -26,6 +24,10 @@ import ssii.pai1.integrity.service.ServerService;
 @RequestMapping(value = "/server")
 public class ServerController {
     
+
+
+    private static final Logger logger = LoggerFactory.getLogger(ServerController.class);
+
     private String challenge = "challenge";
     @Autowired
     private ServerService serverService;
@@ -36,12 +38,14 @@ public class ServerController {
         Map<String, String> response = new HashMap<>();
         response.put("hashFile", entity.getHashFile());
         if(entity.isValid() && serverService.verify(entity)){
+            logger.info("Hash found succesully.");
             try {
                 response.put("mac", serverService.createMAC(entity.getHashFile(),req.getParameter("token"),challenge));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
         }else{
+            logger.error("Hash not found in database. File could have been modified.");
             response.put("error", "Hash file not found");
         }
         return response;

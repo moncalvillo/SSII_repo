@@ -1,0 +1,142 @@
+[2022-03-05T15:52:23.023Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting IntegrityApplication using Java 17.0.2 on MSI with PID 7748 (C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity\target\classes started by pablo in C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity)
+[2022-03-05T15:52:23.023Z] [org.springframework.boot.SpringApplication] [main] [640] [INFO ] No active profile set, falling back to 1 default profile: "default"
+[2022-03-05T15:52:24.024Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [132] [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2022-03-05T15:52:24.024Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [201] [INFO ] Finished Spring Data repository scanning in 81 ms. Found 1 JPA repository interfaces.
+[2022-03-05T15:52:25.025Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2022-03-05T15:52:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:52:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-03-05T15:52:25.025Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.58]
+[2022-03-05T15:52:26.026Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-03-05T15:52:26.026Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2193 ms
+[2022-03-05T15:52:26.026Z] [org.hibernate.jpa.internal.util.LogHelper] [main] [31] [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+[2022-03-05T15:52:26.026Z] [org.hibernate.Version] [main] [44] [INFO ] HHH000412: Hibernate ORM core version 5.6.5.Final
+[2022-03-05T15:52:26.026Z] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager] [main] [56] [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2022-03-05T15:52:26.026Z] [com.zaxxer.hikari.HikariDataSource] [main] [110] [INFO ] HikariPool-1 - Starting...
+[2022-03-05T15:52:26.026Z] [com.zaxxer.hikari.util.DriverDataSource] [main] [70] [WARN ] Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[2022-03-05T15:52:27.027Z] [com.zaxxer.hikari.HikariDataSource] [main] [123] [INFO ] HikariPool-1 - Start completed.
+[2022-03-05T15:52:27.027Z] [org.hibernate.dialect.Dialect] [main] [175] [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+[2022-03-05T15:52:28.028Z] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator] [main] [52] [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-03-05T15:52:28.028Z] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean] [main] [437] [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2022-03-05T15:52:28.028Z] [org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration] [main] [219] [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2022-03-05T15:52:28.028Z] [org.springframework.security.web.DefaultSecurityFilterChain] [main] [52] [INFO ] Will not secure any request
+[2022-03-05T15:52:29.029Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:52:29.029Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2022-03-05T15:52:29.029Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started IntegrityApplication in 6.09 seconds (JVM running for 6.724)
+[2022-03-05T15:52:52.052Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting IntegrityApplication using Java 17.0.2 on MSI with PID 13480 (C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity\target\classes started by pablo in C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity)
+[2022-03-05T15:52:52.052Z] [org.springframework.boot.SpringApplication] [main] [640] [INFO ] No active profile set, falling back to 1 default profile: "default"
+[2022-03-05T15:52:53.053Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [132] [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2022-03-05T15:52:53.053Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [201] [INFO ] Finished Spring Data repository scanning in 175 ms. Found 1 JPA repository interfaces.
+[2022-03-05T15:52:55.055Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2022-03-05T15:52:55.055Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:52:55.055Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-03-05T15:52:55.055Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.58]
+[2022-03-05T15:52:55.055Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-03-05T15:52:55.055Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2971 ms
+[2022-03-05T15:52:55.055Z] [org.hibernate.jpa.internal.util.LogHelper] [main] [31] [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+[2022-03-05T15:52:55.055Z] [org.hibernate.Version] [main] [44] [INFO ] HHH000412: Hibernate ORM core version 5.6.5.Final
+[2022-03-05T15:52:55.055Z] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager] [main] [56] [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2022-03-05T15:52:56.056Z] [com.zaxxer.hikari.HikariDataSource] [main] [110] [INFO ] HikariPool-1 - Starting...
+[2022-03-05T15:52:56.056Z] [com.zaxxer.hikari.util.DriverDataSource] [main] [70] [WARN ] Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[2022-03-05T15:52:56.056Z] [com.zaxxer.hikari.HikariDataSource] [main] [123] [INFO ] HikariPool-1 - Start completed.
+[2022-03-05T15:52:56.056Z] [org.hibernate.dialect.Dialect] [main] [175] [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+[2022-03-05T15:52:57.057Z] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator] [main] [52] [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-03-05T15:52:57.057Z] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean] [main] [437] [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2022-03-05T15:52:57.057Z] [org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration] [main] [219] [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2022-03-05T15:52:57.057Z] [org.springframework.security.web.DefaultSecurityFilterChain] [main] [52] [INFO ] Will not secure any request
+[2022-03-05T15:52:58.058Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:52:58.058Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2022-03-05T15:52:58.058Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started IntegrityApplication in 6.828 seconds (JVM running for 7.566)
+[2022-03-05T15:53:06.006Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-03-05T15:53:06.006Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-03-05T15:53:06.006Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [547] [INFO ] Completed initialization in 13 ms
+[2022-03-05T15:53:06.006Z] [ssii.pai1.integrity.controller.ServerController] [http-nio-8080-exec-1] [47] [INFO ] Hash not found in database. File could have been modified.
+[2022-03-05T15:53:07.007Z] [ssii.pai1.integrity.controller.ServerController] [http-nio-8080-exec-3] [47] [INFO ] Hash not found in database. File could have been modified.
+[2022-03-05T15:53:08.008Z] [ssii.pai1.integrity.controller.ServerController] [http-nio-8080-exec-4] [47] [INFO ] Hash not found in database. File could have been modified.
+[2022-03-05T15:53:45.045Z] [org.springframework.boot.StartupInfoLogger] [main] [55] [INFO ] Starting IntegrityApplication using Java 17.0.2 on MSI with PID 14992 (C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity\target\classes started by pablo in C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity)
+[2022-03-05T15:53:45.045Z] [org.springframework.boot.SpringApplication] [main] [640] [INFO ] No active profile set, falling back to 1 default profile: "default"
+[2022-03-05T15:53:46.046Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [132] [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2022-03-05T15:53:47.047Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [main] [201] [INFO ] Finished Spring Data repository scanning in 65 ms. Found 1 JPA repository interfaces.
+[2022-03-05T15:53:47.047Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [108] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2022-03-05T15:53:47.047Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:53:47.047Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting service [Tomcat]
+[2022-03-05T15:53:47.047Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.58]
+[2022-03-05T15:53:48.048Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-03-05T15:53:48.048Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [main] [290] [INFO ] Root WebApplicationContext: initialization completed in 2257 ms
+[2022-03-05T15:53:48.048Z] [org.hibernate.jpa.internal.util.LogHelper] [main] [31] [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+[2022-03-05T15:53:48.048Z] [org.hibernate.Version] [main] [44] [INFO ] HHH000412: Hibernate ORM core version 5.6.5.Final
+[2022-03-05T15:53:48.048Z] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager] [main] [56] [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2022-03-05T15:53:48.048Z] [com.zaxxer.hikari.HikariDataSource] [main] [110] [INFO ] HikariPool-1 - Starting...
+[2022-03-05T15:53:48.048Z] [com.zaxxer.hikari.util.DriverDataSource] [main] [70] [WARN ] Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[2022-03-05T15:53:49.049Z] [com.zaxxer.hikari.HikariDataSource] [main] [123] [INFO ] HikariPool-1 - Start completed.
+[2022-03-05T15:53:49.049Z] [org.hibernate.dialect.Dialect] [main] [175] [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+[2022-03-05T15:53:50.050Z] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator] [main] [52] [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-03-05T15:53:50.050Z] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean] [main] [437] [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2022-03-05T15:53:50.050Z] [org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration] [main] [219] [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2022-03-05T15:53:50.050Z] [org.springframework.security.web.DefaultSecurityFilterChain] [main] [52] [INFO ] Will not secure any request
+[2022-03-05T15:53:51.051Z] [org.apache.juli.logging.DirectJDKLog] [main] [173] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2022-03-05T15:53:51.051Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [main] [220] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2022-03-05T15:53:51.051Z] [org.springframework.boot.StartupInfoLogger] [main] [61] [INFO ] Started IntegrityApplication in 6.287 seconds (JVM running for 6.93)
+[2022-03-05T15:53:52.052Z] [org.apache.juli.logging.DirectJDKLog] [http-nio-8080-exec-1] [173] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-03-05T15:53:52.052Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [525] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-03-05T15:53:52.052Z] [org.springframework.web.servlet.FrameworkServlet] [http-nio-8080-exec-1] [547] [INFO ] Completed initialization in 6 ms
+[2022-03-05T15:53:52.052Z] [ssii.pai1.integrity.controller.ServerController] [http-nio-8080-exec-1] [47] [INFO ] Hash not found in database. File could have been modified.
+[2022-03-05T15:53:52.052Z] [ssii.pai1.integrity.controller.ServerController] [http-nio-8080-exec-1] [48] [ERROR] AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+[2022-03-05T15:55:49.049Z] [ssii.pai1.integrity.controller.ServerController] [ERROR] AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+[2022-03-05T16:02:21.021Z] [org.springframework.boot.StartupInfoLogger] [INFO ] Starting IntegrityApplication using Java 17.0.2 on MSI with PID 5916 (C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity\target\classes started by pablo in C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity)
+[2022-03-05T16:02:21.021Z] [org.springframework.boot.SpringApplication] [INFO ] No active profile set, falling back to 1 default profile: "default"
+[2022-03-05T16:02:22.022Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [INFO ] Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[2022-03-05T16:02:22.022Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate] [INFO ] Finished Spring Data repository scanning in 73 ms. Found 1 JPA repository interfaces.
+[2022-03-05T16:02:24.024Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [INFO ] Tomcat initialized with port(s): 8080 (http)
+[2022-03-05T16:02:24.024Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Initializing ProtocolHandler ["http-nio-8080"]
+[2022-03-05T16:02:24.024Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Starting service [Tomcat]
+[2022-03-05T16:02:24.024Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Starting Servlet engine: [Apache Tomcat/9.0.58]
+[2022-03-05T16:02:24.024Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Initializing Spring embedded WebApplicationContext
+[2022-03-05T16:02:24.024Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext] [INFO ] Root WebApplicationContext: initialization completed in 2333 ms
+[2022-03-05T16:02:24.024Z] [org.hibernate.jpa.internal.util.LogHelper] [INFO ] HHH000204: Processing PersistenceUnitInfo [name: default]
+[2022-03-05T16:02:24.024Z] [org.hibernate.Version] [INFO ] HHH000412: Hibernate ORM core version 5.6.5.Final
+[2022-03-05T16:02:25.025Z] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager] [INFO ] HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[2022-03-05T16:02:25.025Z] [com.zaxxer.hikari.HikariDataSource] [INFO ] HikariPool-1 - Starting...
+[2022-03-05T16:02:25.025Z] [com.zaxxer.hikari.util.DriverDataSource] [WARN ] Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[2022-03-05T16:02:25.025Z] [com.zaxxer.hikari.HikariDataSource] [INFO ] HikariPool-1 - Start completed.
+[2022-03-05T16:02:25.025Z] [org.hibernate.dialect.Dialect] [INFO ] HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+[2022-03-05T16:02:27.027Z] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator] [INFO ] HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[2022-03-05T16:02:27.027Z] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean] [INFO ] Initialized JPA EntityManagerFactory for persistence unit 'default'
+[2022-03-05T16:02:27.027Z] [org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration] [WARN ] spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[2022-03-05T16:02:28.028Z] [org.springframework.security.web.DefaultSecurityFilterChain] [INFO ] Will not secure any request
+[2022-03-05T16:02:28.028Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Starting ProtocolHandler ["http-nio-8080"]
+[2022-03-05T16:02:28.028Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer] [INFO ] Tomcat started on port(s): 8080 (http) with context path ''
+[2022-03-05T16:02:28.028Z] [org.springframework.boot.StartupInfoLogger] [INFO ] Started IntegrityApplication in 7.215 seconds (JVM running for 7.79)
+[2022-03-05T16:02:31.031Z] [org.apache.juli.logging.DirectJDKLog] [INFO ] Initializing Spring DispatcherServlet 'dispatcherServlet'
+[2022-03-05T16:02:31.031Z] [org.springframework.web.servlet.FrameworkServlet] [INFO ] Initializing Servlet 'dispatcherServlet'
+[2022-03-05T16:02:31.031Z] [org.springframework.web.servlet.FrameworkServlet] [INFO ] Completed initialization in 6 ms
+[2022-03-05T16:02:31.031Z] [ssii.pai1.integrity.controller.ServerController] [INFO ] Hash not found in database. File could have been modified.
+[2022-03-05T16:02:31.031Z] [ssii.pai1.integrity.controller.ServerController] [ERROR] AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+[INFO ] [2022-03-05T16:03:39.039Z] [org.springframework.boot.StartupInfoLogger]  Starting IntegrityApplication using Java 17.0.2 on MSI with PID 13480 (C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity\target\classes started by pablo in C:\Users\pablo\Desktop\UNIVERSIDAD\IS SOFTWARE IV\SSII\repositorySSII\PAI1\integrity)
+[INFO ] [2022-03-05T16:03:39.039Z] [org.springframework.boot.SpringApplication]  No active profile set, falling back to 1 default profile: "default"
+[INFO ] [2022-03-05T16:03:40.040Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate]  Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+[INFO ] [2022-03-05T16:03:40.040Z] [org.springframework.data.repository.config.RepositoryConfigurationDelegate]  Finished Spring Data repository scanning in 81 ms. Found 1 JPA repository interfaces.
+[INFO ] [2022-03-05T16:03:41.041Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer]  Tomcat initialized with port(s): 8080 (http)
+[INFO ] [2022-03-05T16:03:41.041Z] [org.apache.juli.logging.DirectJDKLog]  Initializing ProtocolHandler ["http-nio-8080"]
+[INFO ] [2022-03-05T16:03:41.041Z] [org.apache.juli.logging.DirectJDKLog]  Starting service [Tomcat]
+[INFO ] [2022-03-05T16:03:41.041Z] [org.apache.juli.logging.DirectJDKLog]  Starting Servlet engine: [Apache Tomcat/9.0.58]
+[INFO ] [2022-03-05T16:03:41.041Z] [org.apache.juli.logging.DirectJDKLog]  Initializing Spring embedded WebApplicationContext
+[INFO ] [2022-03-05T16:03:41.041Z] [org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext]  Root WebApplicationContext: initialization completed in 2120 ms
+[INFO ] [2022-03-05T16:03:42.042Z] [org.hibernate.jpa.internal.util.LogHelper]  HHH000204: Processing PersistenceUnitInfo [name: default]
+[INFO ] [2022-03-05T16:03:42.042Z] [org.hibernate.Version]  HHH000412: Hibernate ORM core version 5.6.5.Final
+[INFO ] [2022-03-05T16:03:42.042Z] [org.hibernate.annotations.common.reflection.java.JavaReflectionManager]  HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+[INFO ] [2022-03-05T16:03:42.042Z] [com.zaxxer.hikari.HikariDataSource]  HikariPool-1 - Starting...
+[WARN ] [2022-03-05T16:03:42.042Z] [com.zaxxer.hikari.util.DriverDataSource]  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+[INFO ] [2022-03-05T16:03:43.043Z] [com.zaxxer.hikari.HikariDataSource]  HikariPool-1 - Start completed.
+[INFO ] [2022-03-05T16:03:43.043Z] [org.hibernate.dialect.Dialect]  HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+[INFO ] [2022-03-05T16:03:43.043Z] [org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator]  HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+[INFO ] [2022-03-05T16:03:43.043Z] [org.springframework.orm.jpa.AbstractEntityManagerFactoryBean]  Initialized JPA EntityManagerFactory for persistence unit 'default'
+[WARN ] [2022-03-05T16:03:43.043Z] [org.springframework.boot.autoconfigure.orm.jpa.JpaBaseConfiguration$JpaWebConfiguration]  spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+[INFO ] [2022-03-05T16:03:44.044Z] [org.springframework.security.web.DefaultSecurityFilterChain]  Will not secure any request
+[INFO ] [2022-03-05T16:03:44.044Z] [org.apache.juli.logging.DirectJDKLog]  Starting ProtocolHandler ["http-nio-8080"]
+[INFO ] [2022-03-05T16:03:44.044Z] [org.springframework.boot.web.embedded.tomcat.TomcatWebServer]  Tomcat started on port(s): 8080 (http) with context path ''
+[INFO ] [2022-03-05T16:03:44.044Z] [org.springframework.boot.StartupInfoLogger]  Started IntegrityApplication in 5.841 seconds (JVM running for 6.429)
+[INFO ] [2022-03-05T16:03:49.049Z] [org.apache.juli.logging.DirectJDKLog]  Initializing Spring DispatcherServlet 'dispatcherServlet'
+[INFO ] [2022-03-05T16:03:49.049Z] [org.springframework.web.servlet.FrameworkServlet]  Initializing Servlet 'dispatcherServlet'
+[INFO ] [2022-03-05T16:03:49.049Z] [org.springframework.web.servlet.FrameworkServlet]  Completed initialization in 1 ms
+[INFO ] [2022-03-05T16:03:49.049Z] [ssii.pai1.integrity.controller.ServerController]  Hash not found in database. File could have been modified.
+[ERROR] [2022-03-05T16:03:49.049Z] [ssii.pai1.integrity.controller.ServerController]  AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
