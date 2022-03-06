@@ -12,20 +12,20 @@ public class Item {
     
     @Id
     @Column
-    private Integer id;
+    private String id;
     
     @Column
     private String hashFile;
 
     public boolean isValid(){
-        return !this.hashFile.isBlank() && !this.hashFile.isEmpty() && (99999 <= this.id >> 0) && this.id.toString().length()==5;
+        return !this.id.equals(null) && !this.hashFile.equals(null) && !this.hashFile.isBlank() && !this.hashFile.isEmpty() && !this.id.isBlank() && !this.id.isEmpty();
     }
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 
