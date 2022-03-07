@@ -3,6 +3,7 @@ package ssii.pai1.integrity.service;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,8 +19,8 @@ public class ServerService {
     private ServerRepository serverRepo;
 
     public boolean verify(Item entity){
-        Item foundEntity = serverRepo.findById(entity.getId()).get();
-        if(foundEntity.getHashFile().equals(entity.getHashFile())){
+        Optional<Item> foundEntity = serverRepo.findItemByPath(entity.getPath());
+        if(foundEntity.isPresent() && foundEntity.get().getHashFile().equals(entity.getHashFile())){
             return true;
         }else{
             return false;
