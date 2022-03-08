@@ -37,7 +37,7 @@ public class LogLine {
     
     @Override
     public String toString() {
-        return "[" + this.type + "] [" + this.date + "] " + this.msg + " -- " + this.method + " " + this.request + " " + this.bodyParams;
+        return "[" + this.type + "] [" + this.date + "] " + this.msg + " -- " + this.method + " " + this.request + " " + this.bodyParams + "\n";
     }
 
     public LocalDateTime getDate() {
