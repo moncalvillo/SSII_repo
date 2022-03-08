@@ -1,5 +1,6 @@
 package ssii.pai1.integrity.service;
 
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -31,6 +32,11 @@ public class ServerService {
         String str = hashFile + token + challenge;
         MessageDigest digest = MessageDigest.getInstance("SHA-256");
         byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-        return encodedhash.toString();
+        return toHex(encodedhash);
+    }
+
+    public static String toHex(byte[] bytes) {
+        BigInteger bi = new BigInteger(1, bytes);
+        return String.format("%0" + (bytes.length << 1) + "X", bi);
     }
 }

@@ -26,8 +26,8 @@ public class LogLine {
     
     public void writeLog(){
         try {
-            FileWriter fWriter = new FileWriter(path);
-            fWriter.write(this.toString());
+            FileWriter fWriter = new FileWriter(path,true);
+            fWriter.append(this.toString());
             System.out.println(this);
             fWriter.close();
         } catch (IOException e) {
