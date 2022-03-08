@@ -1,1 +1,0 @@
-[BAD_PARAMETERS] [2022-03-08T13:22:18.967582700] Bad parameters {POST /server/verification Body: { path = asdfasdf , hashFile =  , token =  }}
