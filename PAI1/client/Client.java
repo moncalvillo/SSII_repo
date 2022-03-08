@@ -49,10 +49,10 @@ public class Client {
 		JOptionPane.showMessageDialog(null, b);
 	}
 
-	public static Map<String, String> llamar(String token, String hashFile) throws IOException {
+	public static Map<String, String> llamar(String id, String token, String hashFile) throws IOException {
 
 		URL url = new URL("http://localhost:8080/server/verification");
-        String postData = "id=00001&token="+token+"&hashFile="+hashFile;
+        String postData = "id="+id+"&token="+token+"&hashFile="+hashFile;
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
@@ -85,18 +85,17 @@ public class Client {
         
 	} 
 	
-	public static void main(String[] args) throws NoSuchAlgorithmException {
+	public static void verifyFile(String id, String hashfile) throws NoSuchAlgorithmException {
 
 		try {
 
 			String token = generateUUID();
-			String hashfile = "8aca9664752dbae36135fd0956c956fc4a370feeac67485b49bcd4b99608ae41";
 
 			String mac = createMAC(hashfile, token, challenge);
 			System.out.println("MAC generada: " + mac);
 
 			// Llamada a la API
-			Map<String, String> respuesta = llamar(token, hashfile);
+			Map<String, String> respuesta = llamar(id, token, hashfile);
 
 			// Recibe una respuesta
 			verificationFunction(mac, respuesta);
