@@ -20,6 +20,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ssii.pai1.integrity.model.Item;
 import ssii.pai1.integrity.service.ServerService;
+import ssii.utils.LogLine;
+import ssii.utils.LogType;
 
 @RestController
 @RequestMapping(value = "/server")
@@ -41,24 +43,27 @@ public class ServerController {
         // Long token = Long.valueOf(req.getParameter("token"));
         response.put("hashFile", entity.getHashFile());
         if(!entity.isValid() || req.getParameter("token") == null || req.getParameter("token").isEmpty() || req.getParameter("token").isBlank()){
-            logger.error("Bad parameters.");
-            logger.error("Request: " + req.getServletPath());
-            logger.error("Method: " + req.getMethod());
-            logger.error("Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }");
+            String msg = "Bad parameters";
+            String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
+            LogLine log = new LogLine(msg, LogType.BAD_PARAMETERS, req.getServletPath(), req.getMethod(), bodyParams);
+            log.writeLog();
             response.put("error", "Bad parameters");
         }
         else if(serverService.verify(entity)){
-            logger.info("Hash found succesully.");
+            String msg = "Hash verified succesfully.";
+            String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
+            LogLine log = new LogLine(msg, LogType.HASH_OK, req.getServletPath(), req.getMethod(), bodyParams);
+            log.writeLog();
             try {
                 response.put("mac", serverService.createMAC(entity.getHashFile(),req.getParameter("token"),challenge));
             } catch (NoSuchAlgorithmException e) {
                 e.printStackTrace();
             }
         }else{
-            logger.error("Hash not found in database. File could have been modified.");
-            logger.error("Request: " + req.getServletPath());
-            logger.error("Method: " + req.getMethod());
-            logger.error("Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }");
+            String msg = "Hash not found in database. File could have been modified.";
+            String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
+            LogLine log = new LogLine(msg, LogType.HASH_NOT_FOUND, req.getServletPath(), req.getMethod(), bodyParams);
+            log.writeLog();
             response.put("error", "Hash file not found");
         }
         return response;

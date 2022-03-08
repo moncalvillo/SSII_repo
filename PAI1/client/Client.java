@@ -24,10 +24,10 @@ public class Client {
 
 	public static String createMAC(String hashFile, String token, String challenge) throws NoSuchAlgorithmException {
 		String str = hashFile + token + challenge;
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-        return encodedhash.toString();
-    }
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+		return Node.toHex(encodedhash);
+	}
 
 	public static String generateUUID() {
 		return UUID.randomUUID().toString();
@@ -36,15 +36,10 @@ public class Client {
 	public static void verificationFunction(String mac, Map<String, String> respuesta) {
 		String b = "";
 		System.out.println("MAC: " + mac + " Respuesta recibida: " + respuesta);
-		System.out.println(respuesta.containsKey("error"));
-		if(respuesta.containsKey("error")) {
-			b="INTEGRITY_FILE_FAIL";
+		if (!respuesta.containsKey("error") && respuesta.get("mac").equals(mac)) {
+			b = "INTEGRITY_FILE_OK";
 		} else {
-			if(respuesta.get("mac").equals(mac)) {
-				b = "INTEGRITY_FILE_OK";
-			} else {
-				b="INTEGRITY_FILE_FAIL";
-			}
+			b = "INTEGRITY_FILE_FAIL";
 		}
 		JOptionPane.showMessageDialog(null, b);
 	}
@@ -57,28 +52,28 @@ public class Client {
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-        conn.setDoOutput(true);
-        conn.getOutputStream().write(postDataBytes);
-		
-		//Respuesta
-        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+		conn.setDoOutput(true);
+		conn.getOutputStream().write(postDataBytes);
+
+		// Respuesta
+		Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 		StringBuilder sb = new StringBuilder();
 		for (int c = in.read(); c != -1; c = in.read()) {
 			sb.append((char) c);
 		}
 		System.out.println("Respuesta del servidor: " + sb);
 
-		//Tratamiento de datos
+		// Tratamiento de datos
 		Map<String, String> result = new HashMap<String, String>();
-		sb.deleteCharAt(0).deleteCharAt(sb.length()-1);
+		sb.deleteCharAt(0).deleteCharAt(sb.length() - 1);
 		String response = sb.toString();
 		String[] values = response.split(",");
-		for (int i = 0; i<values.length; i++) {
+		for (int i = 0; i < values.length; i++) {
 			String[] value = values[i].split(":");
-			result.put(value[0], value[1]);
+			result.put(value[0].replace("\"", ""), value[1].replace("\"", ""));
 		}
 
 		return result;
@@ -100,13 +95,12 @@ public class Client {
 			// Recibe una respuesta
 			verificationFunction(mac, respuesta);
 
-
 		} // end try
 
 		// handle exception communicating with server
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-		} catch(IOException ioe) {
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
