@@ -1,5 +1,6 @@
 package ssii.pai1.integrity.controller;
 
+import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
@@ -34,10 +35,19 @@ public class ServerController {
 
     
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
-    public Map<String,String> requestVerification(Item entity, BindingResult result, HttpServletRequest req, HttpServletResponse resp){
+    public Map<String,String> requestVerification(HttpServletRequest req, HttpServletResponse resp){
         Map<String, String> response = new HashMap<>();
+        Item entity = new Item(req.getParameter("path"),req.getParameter("hashFile"));
+        // Long token = Long.valueOf(req.getParameter("token"));
         response.put("hashFile", entity.getHashFile());
-        if(entity.isValid() && serverService.verify(entity)){
+        if(!entity.isValid() || req.getParameter("token") == null || req.getParameter("token").isEmpty() || req.getParameter("token").isBlank()){
+            logger.error("Bad parameters.");
+            logger.error("Request: " + req.getServletPath());
+            logger.error("Method: " + req.getMethod());
+            logger.error("Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }");
+            response.put("error", "Bad parameters");
+        }
+        else if(serverService.verify(entity)){
             logger.info("Hash found succesully.");
             try {
                 response.put("mac", serverService.createMAC(entity.getHashFile(),req.getParameter("token"),challenge));
@@ -46,6 +56,9 @@ public class ServerController {
             }
         }else{
             logger.error("Hash not found in database. File could have been modified.");
+            logger.error("Request: " + req.getServletPath());
+            logger.error("Method: " + req.getMethod());
+            logger.error("Body: { path = " + req.getParameter("path") + " , hashFile = " + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }");
             response.put("error", "Hash file not found");
         }
         return response;
