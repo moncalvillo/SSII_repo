@@ -1,29 +1,38 @@
 package ssii.pai1.integrity.service;
 
+import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import ssii.pai1.integrity.model.IntegrityFile;
 import ssii.pai1.integrity.model.Item;
+import ssii.pai1.integrity.model.Node;
+import ssii.pai1.integrity.repository.FileRepository;
 import ssii.pai1.integrity.repository.ServerRepository;
 
 @Service
 public class ServerService {
-    
 
     @Autowired
     private ServerRepository serverRepo;
 
-    public boolean verify(Item entity){
+    @Autowired
+    private FileRepository fileRepository;
+
+    public boolean verify(Item entity) {
         Optional<Item> foundEntity = serverRepo.findItemByPath(entity.getPath());
-        if(foundEntity.isPresent() && foundEntity.get().getHashFile().equals(entity.getHashFile())){
+        if (foundEntity.isPresent() && foundEntity.get().getHashFile().equals(entity.getHashFile())) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -38,5 +47,24 @@ public class ServerService {
     public static String toHex(byte[] bytes) {
         BigInteger bi = new BigInteger(1, bytes);
         return String.format("%0" + (bytes.length << 1) + "X", bi);
+    }
+
+    public List<String> getFiles() {
+        return fileRepository.findPaths();
+    }
+
+    public void populateDatabase(String directory) throws IOException {
+        String[] files = TreeBuilder.getAllFilesFromDirectory(directory);
+
+        List<IntegrityFile> integrityFiles = Stream.of(files).map(IntegrityFile::new).collect(Collectors.toList());
+        fileRepository.saveAll(integrityFiles);
+
+        Node root = TreeBuilder.buildTree(files);
+
+        IntegrityChecker.bfsIterate(root, (node) -> {
+            Item item = new Item(node.getId(), node.getHashFile());
+            serverRepo.save(item);
+            return false;
+        });
     }
 }

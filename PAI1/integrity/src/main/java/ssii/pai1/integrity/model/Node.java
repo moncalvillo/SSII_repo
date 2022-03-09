@@ -1,3 +1,5 @@
+package ssii.pai1.integrity.model;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -14,26 +16,16 @@ public class Node {
 
     private Integer numberOfChildren;
 
+    private Integer numberOfNodes;
+
     private Node(Node left, Node right) {
         calculateDigest(left, right);
 
-        this.numberOfChildren = 0;
-
-        if (left != null) {
-            this.numberOfChildren += left.getNumberOfChildren();
-        }
-
-        if (right != null) {
-            this.numberOfChildren += right.getNumberOfChildren();
-        }
-
         this.left = left;
         this.right = right;
-
     }
 
     private Node(String id, String hashFile) {
-        this.numberOfChildren = 1;
         this.id = id;
         this.hashFile = hashFile;
     }
@@ -100,6 +92,14 @@ public class Node {
         this.numberOfChildren = numberOfChildren;
     }
 
+    public Integer getNumberOfNodes() {
+        return numberOfNodes;
+    }
+
+    public void setNumberOfNodes(Integer numberOfNodes) {
+        this.numberOfNodes = numberOfNodes;
+    }
+
     public String getHashFile() {
         return hashFile;
     }
@@ -162,7 +162,7 @@ public class Node {
 
     private String s(String a) {
         return a +
-                this.id + " - " + this.numberOfChildren + "\n"
+                this.id + "\n"
                 + (left != null ? left.s(a + "- - - ") : a + "- - - " + "NULL\n")
                 + (right != null ? right.s(a + "- - - ") : a + "- - - " + "NULL\n");
     }

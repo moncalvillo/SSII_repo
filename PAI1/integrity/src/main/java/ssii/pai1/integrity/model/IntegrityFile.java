@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class Item {
+public class IntegrityFile {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,24 +19,12 @@ public class Item {
     @Column
     private String path;
 
-    @Column
-    private String hashFile;
-
-    public Item(String path, String hashFile) {
+    public IntegrityFile(String path) {
         this.path = path;
-        this.hashFile = hashFile;
     }
 
-    public Item() {
+    public IntegrityFile() {
 
-    }
-
-    public boolean isValid() {
-        // Hash validation
-        boolean b = this.hashFile != null && !this.hashFile.isBlank() && !this.hashFile.isEmpty();
-        // Path validation
-        b = b && this.path != null && !this.path.isBlank() && !this.path.isEmpty();
-        return b;
     }
 
     public Long getId() {
@@ -53,14 +41,6 @@ public class Item {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public String getHashFile() {
-        return hashFile;
-    }
-
-    public void setHashFile(String hashFile) {
-        this.hashFile = hashFile;
     }
 
 }

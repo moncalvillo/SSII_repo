@@ -1,20 +1,16 @@
-import java.io.File;
 import java.io.IOException;
-import java.math.BigInteger;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class TreeBuilder {
 
+<<<<<<< HEAD
     public static void main(String[] args) {
         String[] paths = { "./README.md",
                 "D:\\Projects\\SSI\\test\\asd.txt",
@@ -54,6 +50,8 @@ public class TreeBuilder {
         });
     }
 
+=======
+>>>>>>> master
     public static Node buildTree(String[] filePaths) {
 
         List<Node> nodes = TreeBuilder.parseFileNodes(filePaths);
@@ -70,25 +68,27 @@ public class TreeBuilder {
 
     public static Node createTreeBottomUp(List<Node> nodes) {
         List<Node> parentNodes = new ArrayList<>();
-
+        // Integer numberChildren = nodes.size();
+        Integer total = 0;
         while (nodes.size() > 1) {
             parentNodes = new ArrayList<>();
+            total += nodes.size();
             for (int i = 0; i < nodes.size(); i += 2) {
-                if (i + 1 == nodes.size()) {
-                    Node left = nodes.get(i);
-                    Node parent = Node.of(left, null);
-                    parentNodes.add(parent);
-                } else {
-                    Node left = nodes.get(i);
-                    Node right = nodes.get(i + 1);
-                    Node parent = Node.of(left, right);
-                    parentNodes.add(parent);
-                }
+                Node left = nodes.get(i);
+                Node right = (i + 1 == nodes.size()) ? null : nodes.get(i + 1);
+                Node parent = Node.of(left, right);
+
+                parentNodes.add(parent);
+
             }
             nodes = parentNodes;
         }
+        total++;
 
-        return parentNodes.get(0);
+        Node root = parentNodes.get(0);
+        // root.setNumberOfNodes(total);
+        // root.setNumberOfChildren(numberChildren);
+        return root;
     }
 
     public static Node parseFileNode(String path) {

@@ -1,17 +1,13 @@
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.net.*;
-import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Map;
 import java.util.*;
-import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.io.*;
-
-import javax.swing.JOptionPane;
 
 public class Client {
 
@@ -24,92 +20,133 @@ public class Client {
 
 	public static String createMAC(String hashFile, String token, String challenge) throws NoSuchAlgorithmException {
 		String str = hashFile + token + challenge;
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-        return encodedhash.toString();
-    }
+		MessageDigest digest = MessageDigest.getInstance("SHA-256");
+		byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+		return Node.toHex(encodedhash);
+	}
 
 	public static String generateUUID() {
 		return UUID.randomUUID().toString();
 	}
 
-	public static void verificationFunction(String mac, Map<String, String> respuesta) {
-		String b = "";
-		System.out.println("MAC: " + mac + " Respuesta recibida: " + respuesta);
-		System.out.println(respuesta.containsKey("error"));
-		if(respuesta.containsKey("error")) {
-			b="INTEGRITY_FILE_FAIL";
-		} else {
-			if(respuesta.get("mac").equals(mac)) {
-				b = "INTEGRITY_FILE_OK";
-			} else {
-				b="INTEGRITY_FILE_FAIL";
-			}
-		}
-		JOptionPane.showMessageDialog(null, b);
+	public static Boolean verificationFunction(String mac, Map<String, String> respuesta) {
+		return !respuesta.containsKey("error") && respuesta.get("mac").equals(mac);
 	}
 
-	public static Map<String, String> llamar(String token, String hashFile) throws IOException {
+	public static Map<String, String> llamar(String id, String token, String hashFile) throws IOException {
 
 		URL url = new URL("http://localhost:8080/server/verification");
-        String postData = "id=00001&token="+token+"&hashFile="+hashFile;
+		String postData = "path=" + id + "&token=" + token + "&hashFile=" + hashFile;
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod("POST");
-        conn.setRequestProperty("Content-Type","application/x-www-form-urlencoded");
-        conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
-        conn.setDoOutput(true);
-        conn.getOutputStream().write(postDataBytes);
-		
-		//Respuesta
-        Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+		conn.setRequestMethod("POST");
+		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+		conn.setDoOutput(true);
+		conn.getOutputStream().write(postDataBytes);
+
+		// Respuesta
+		Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
 		StringBuilder sb = new StringBuilder();
 		for (int c = in.read(); c != -1; c = in.read()) {
 			sb.append((char) c);
 		}
-		System.out.println("Respuesta del servidor: " + sb);
+		// System.out.println("Respuesta del servidor: " + sb);
 
-		//Tratamiento de datos
+		// Tratamiento de datos
 		Map<String, String> result = new HashMap<String, String>();
-		sb.deleteCharAt(0).deleteCharAt(sb.length()-1);
+		sb.deleteCharAt(0).deleteCharAt(sb.length() - 1);
 		String response = sb.toString();
 		String[] values = response.split(",");
-		for (int i = 0; i<values.length; i++) {
+		for (int i = 0; i < values.length; i++) {
 			String[] value = values[i].split(":");
-			result.put(value[0], value[1]);
+			result.put(value[0].replace("\"", ""), value[1].replace("\"", ""));
 		}
 
 		return result;
-        
-	} 
-	
-	public static void main(String[] args) throws NoSuchAlgorithmException {
 
+	}
+
+	public static Boolean verifyFile(Node node) {
 		try {
 
 			String token = generateUUID();
-			String hashfile = "8aca9664752dbae36135fd0956c956fc4a370feeac67485b49bcd4b99608ae41";
 
+			String hashfile = node.getHashFile();
+			String id = node.getId();
 			String mac = createMAC(hashfile, token, challenge);
-			System.out.println("MAC generada: " + mac);
 
 			// Llamada a la API
-			Map<String, String> respuesta = llamar(token, hashfile);
+			Map<String, String> respuesta = llamar(id, token, hashfile);
 
 			// Recibe una respuesta
-			verificationFunction(mac, respuesta);
-
+			Boolean isOk = verificationFunction(mac, respuesta);
+			return isOk;
 
 		} // end try
 
 		// handle exception communicating with server
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-		} catch(IOException ioe) {
+		} catch (IOException ioe) {
 			ioe.printStackTrace();
 		}
 
+		return false;
+
+	}
+
+	public static String[] getFilePaths() {
+		URL url;
+		try {
+			url = new URL("http://localhost:8080/server/files");
+			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod("GET");
+
+			// Respuesta
+			Reader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "UTF-8"));
+			StringBuilder sb = new StringBuilder();
+			for (int c = in.read(); c != -1; c = in.read()) {
+				sb.append((char) c);
+			}
+
+			String arr = sb.toString().replaceAll("\"", "");
+			return arr.substring(1, arr.length() - 1).split(",");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return new String[0];
+	}
+
+	public static void verifyIntegrity() {
+		System.out.println("Iniciando análisis de integridad de ficheros\n");
+		String[] paths = getFilePaths();
+
+		Node root = TreeBuilder.buildTree(paths);
+		// System.out.println(root);
+
+		Integer totalFiles = root.getNumberOfChildren();
+		IntegrityProgress integrityProgress = new IntegrityProgress(totalFiles, 5.0);
+
+		IntegrityChecker.bfsIterate(root, (node) -> {
+			Boolean isOk = verifyFile(node);
+			IntegrityChecker.processProgress(node, isOk, integrityProgress);
+			return isOk;
+		});
+
+		integrityProgress.showResults();
+
+	}
+
+	public static void main(String[] args) throws IOException {
+		Config config = new Config(".config");
+		Long interval = config.getTime();
+
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleWithFixedDelay(Client::verifyIntegrity, 0, interval, TimeUnit.MILLISECONDS);
 	}
 }
