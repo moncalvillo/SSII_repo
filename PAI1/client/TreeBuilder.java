@@ -47,7 +47,7 @@ public class TreeBuilder {
             Boolean equals = verifiedHash.equals(node.getHashFile());
             if (!equals && node.isLeaf()) {
                 System.out.println("Node: " + node.getId() + " exected: " + verifiedHash + " got: " + node.getHashFile()
-                        + " isOc: " + equals);
+                        + " isOk: " + equals);
             }
 
             return equals;
