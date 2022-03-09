@@ -1,6 +1,10 @@
+package ssii.pai1.integrity.service;
+
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.function.Function;
+
+import ssii.pai1.integrity.model.Node;
 
 public class IntegrityChecker {
 
@@ -30,11 +34,4 @@ public class IntegrityChecker {
 
     }
 
-    public static void processProgress(Node node, Boolean isOk, IntegrityProgress integrityProgress) {
-        IntegrityResult result = new IntegrityResult(node, isOk);
-        integrityProgress.getResults().add(result);
-        if (integrityProgress.isNewProgress()) {
-            integrityProgress.showProgress();
-        }
-    }
 }
