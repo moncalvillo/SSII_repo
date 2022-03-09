@@ -33,10 +33,10 @@ public class Client {
 		return !respuesta.containsKey("error") && respuesta.get("mac").equals(mac);
 	}
 
-	public static Map<String, String> llamar(String id, String token, String hashFile) throws IOException {
+	public static Map<String, String> llamar(String id, String token, String hashFile, Integer numbFiles) throws IOException {
 
 		URL url = new URL("http://localhost:8080/server/verification");
-		String postData = "path=" + id + "&token=" + token + "&hashFile=" + hashFile;
+		String postData = "path=" + id + "&token=" + token + "&hashFile=" + hashFile + "&numbFiles=" + numbFiles;
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
@@ -77,9 +77,9 @@ public class Client {
 			String hashfile = node.getHashFile();
 			String id = node.getId();
 			String mac = createMAC(hashfile, token, challenge);
-
+			Integer numbFiles = node.getNumberOfChildren();
 			// Llamada a la API
-			Map<String, String> respuesta = llamar(id, token, hashfile);
+			Map<String, String> respuesta = llamar(id, token, hashfile, numbFiles);
 
 			// Recibe una respuesta
 			Boolean isOk = verificationFunction(mac, respuesta);
@@ -127,7 +127,7 @@ public class Client {
 		String[] paths = getFilePaths();
 
 		Node root = TreeBuilder.buildTree(paths);
-		// System.out.println(root);
+		//System.out.println(root);
 
 		Integer totalFiles = root.getNumberOfChildren();
 		IntegrityProgress integrityProgress = new IntegrityProgress(totalFiles, 5.0);

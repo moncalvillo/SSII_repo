@@ -56,9 +56,12 @@ public class ServerService {
     public void populateDatabase(String directory) throws IOException {
         String[] files = TreeBuilder.getAllFilesFromDirectory(directory);
 
+        fileRepository.deleteAll();
+        serverRepo.deleteAll();
+
         List<IntegrityFile> integrityFiles = Stream.of(files).map(IntegrityFile::new).collect(Collectors.toList());
         fileRepository.saveAll(integrityFiles);
-
+        files = getFiles().toArray(new String[0]);
         Node root = TreeBuilder.buildTree(files);
 
         IntegrityChecker.bfsIterate(root, (node) -> {
@@ -66,5 +69,11 @@ public class ServerService {
             serverRepo.save(item);
             return false;
         });
+    }
+
+    public static void report(){
+
+        
+
     }
 }

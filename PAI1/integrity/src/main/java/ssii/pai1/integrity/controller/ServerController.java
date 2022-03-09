@@ -36,11 +36,12 @@ public class ServerController {
     public Map<String, String> requestVerification(HttpServletRequest req, HttpServletResponse resp) {
         Map<String, String> response = new HashMap<>();
         Item entity = new Item(req.getParameter("path"), req.getParameter("hashFile"));
-        // Long token = Long.valueOf(req.getParameter("token"));
+        Integer children = Integer.valueOf(req.getParameter("numbFiles"));
+        boolean isLeaf = children == 1;
         response.put("hashFile", entity.getHashFile());
-        System.out.println(entity);
         if (!entity.isValid() || req.getParameter("token") == null || req.getParameter("token").isEmpty()
                 || req.getParameter("token").isBlank()) {
+            
             String msg = "Bad parameters";
             String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = "
                     + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
@@ -48,11 +49,12 @@ public class ServerController {
             log.writeLog();
             response.put("error", "Bad parameters");
         } else if (serverService.verify(entity)) {
-            String msg = "Hash verified succesfully.";
+            String msg = "Hash verified succesfully. Files verified: " + children + ".";
             String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = "
                     + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
             LogLine log = new LogLine(msg, LogType.HASH_OK, req.getServletPath(), req.getMethod(), bodyParams);
             log.writeLog();
+           
             try {
                 response.put("mac",
                         serverService.createMAC(entity.getHashFile(), req.getParameter("token"), challenge));
@@ -60,11 +62,13 @@ public class ServerController {
                 e.printStackTrace();
             }
         } else {
-            String msg = "Hash not found in database. File could have been modified.";
-            String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = "
-                    + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
-            LogLine log = new LogLine(msg, LogType.HASH_NOT_FOUND, req.getServletPath(), req.getMethod(), bodyParams);
-            log.writeLog();
+            if(isLeaf){
+                String msg = "Hash not found in database. File could have been modified.";
+                String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = "
+                        + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
+                LogLine log = new LogLine(msg, LogType.HASH_NOT_FOUND, req.getServletPath(), req.getMethod(), bodyParams);
+                log.writeLog();
+            }
             response.put("error", "Hash file not found");
         }
         return response;
