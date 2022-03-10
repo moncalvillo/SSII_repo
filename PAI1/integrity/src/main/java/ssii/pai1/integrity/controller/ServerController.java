@@ -49,7 +49,7 @@ public class ServerController {
             log.writeLog();
             response.put("error", "Bad parameters");
         } else if (serverService.verify(entity)) {
-            String msg = "Hash verified succesfully. Files verified: " + children + ".";
+            String msg = "Hash verified succesfully. Files verified: #" + children + ".";
             String bodyParams = "Body: { path = " + req.getParameter("path") + " , hashFile = "
                     + req.getParameter("hashFile") + " , token = " + req.getParameter("token") + " }";
             LogLine log = new LogLine(msg, LogType.HASH_OK, req.getServletPath(), req.getMethod(), bodyParams);

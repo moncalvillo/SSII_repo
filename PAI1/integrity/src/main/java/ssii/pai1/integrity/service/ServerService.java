@@ -1,10 +1,12 @@
 package ssii.pai1.integrity.service;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -18,6 +20,7 @@ import ssii.pai1.integrity.model.Item;
 import ssii.pai1.integrity.model.Node;
 import ssii.pai1.integrity.repository.FileRepository;
 import ssii.pai1.integrity.repository.ServerRepository;
+import ssii.utils.ReportFile;
 
 @Service
 public class ServerService {
@@ -71,9 +74,10 @@ public class ServerService {
         });
     }
 
-    public static void report(){
+    public static void report() throws FileNotFoundException, IOException, ParseException{
 
-        
+        ReportFile repFile = new ReportFile();
+        repFile.report();
 
     }
 }
