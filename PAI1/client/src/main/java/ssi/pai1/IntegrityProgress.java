@@ -125,7 +125,7 @@ public class IntegrityProgress {
         	//Meter aqui los tres parametros que faltan (los correos deben ser gmail).
         	//Para la contrase�a es posible que haya que generar una contrase�a de aplicacion en https://myaccount.google.com/security?hl=es
         	//La contrase�a generada se copia en el parametro password
-        	SendEmail.sendEmail("pablogonmon@gmail.com", "pablogonmon1@gmail.com", message, "Ficheros corruptos!!!", "yehnjkaptpzrsdqf");
+        	SendEmail.sendEmail("destino@gmail.com", "origen@gmail.com", message, "Ficheros corruptos!!!", "claveCorreoOrigen");
         	
         }
     }
