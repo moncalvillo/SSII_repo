@@ -1,3 +1,5 @@
+package src.main.java.pai1;
+
 import java.io.IOException;
 import java.net.*;
 import java.nio.charset.StandardCharsets;

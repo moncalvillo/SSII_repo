@@ -1,3 +1,5 @@
+package src.main.java.pai1;
+
 public class IntegrityResult {
     Node node;
     Boolean isOk;

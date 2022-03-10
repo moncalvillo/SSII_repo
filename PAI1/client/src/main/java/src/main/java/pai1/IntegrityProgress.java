@@ -1,3 +1,5 @@
+package src.main.java.pai1;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -110,9 +112,17 @@ public class IntegrityProgress {
         System.out.println(notOkFiles);
 
         System.out.println("Ficheros analizados: " + total);
-
-        System.out.println(String.format("Ficheros corruptos: %s - %.0f%%", numberOfNotOkFiles, percentageNotOk));
+        
+        String fileschanges = String.format("\nFicheros corruptos: %s - %.0f%%", numberOfNotOkFiles, percentageNotOk);
+        System.out.println(fileschanges);
         System.out.println(String.format("Ficheros sanos: %s - %.0f%%", numberOfOkFiles, percentageOk));
+        
+        if(numberOfNotOkFiles>0) {
+        	String message = "\nSe ha detectado una intrusión en el sistema de archivos\n";
+        	message+=fileschanges;
+        	message+="\nLos ficheros que han sido modificados son:\n"+notOkFiles;
+        	SendEmail.sendEmail("josrompoz1@gmail.com", "romeropozojosecarlos@gmail.com", message, "¡¡¡Ficheros corruptos!!!", "bskvldbzhqokbinq");
+        }
     }
 
     public Integer getStepNumber() {

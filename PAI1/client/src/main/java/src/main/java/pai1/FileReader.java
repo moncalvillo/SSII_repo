@@ -1,3 +1,5 @@
+package src.main.java.pai1;
+
 import java.io.File;
 import java.nio.file.Path;
 import java.util.List;

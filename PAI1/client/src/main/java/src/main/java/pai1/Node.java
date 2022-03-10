@@ -1,3 +1,5 @@
+package src.main.java.pai1;
+
 import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
