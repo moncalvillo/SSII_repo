@@ -126,6 +126,7 @@ public class IntegrityProgress {
         	//Para la contraseña es posible que haya que generar una contraseña de aplicacion en https://myaccount.google.com/security?hl=es
         	//La contraseña generada se copia en el parametro password
         	SendEmail.sendEmail("correodestinatario", "correoorigen", message, "¡¡¡Ficheros corruptos!!!", "contraseñacorreoorigen");
+        	
         }
     }
 
