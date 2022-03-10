@@ -118,10 +118,14 @@ public class IntegrityProgress {
         System.out.println(String.format("Ficheros sanos: %s - %.0f%%", numberOfOkFiles, percentageOk));
         
         if(numberOfNotOkFiles>0) {
-        	String message = "\nSe ha detectado una intrusión en el sistema de archivos\n";
+        	String message = "<br>Se ha detectado una intrusión en el sistema de archivos<br>";
         	message+=fileschanges;
-        	message+="\nLos ficheros que han sido modificados son:\n"+notOkFiles;
-        	SendEmail.sendEmail("josrompoz1@gmail.com", "romeropozojosecarlos@gmail.com", message, "¡¡¡Ficheros corruptos!!!", "bskvldbzhqokbinq");
+        	message+="<br>Los ficheros que han sido modificados son:<br>"+notOkFiles;
+        	
+        	//Meter aqui los tres parametros que faltan (los correos deben ser gmail).
+        	//Para la contraseña es posible que haya que generar una contraseña de aplicacion en https://myaccount.google.com/security?hl=es
+        	//La contraseña generada se copia en el parametro password
+        	SendEmail.sendEmail("correodestinatario", "correoorigen", message, "¡¡¡Ficheros corruptos!!!", "contraseñacorreoorigen");
         }
     }
 
