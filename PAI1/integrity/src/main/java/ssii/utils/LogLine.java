@@ -1,5 +1,6 @@
 package ssii.utils;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -26,7 +27,11 @@ public class LogLine {
     
     public void writeLog(){
         try {
-            FileWriter fWriter = new FileWriter(path,true);
+            File file = new File(path);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            FileWriter fWriter = new FileWriter(file, true);
             fWriter.append(this.toString());
             System.out.println(this);
             fWriter.close();
