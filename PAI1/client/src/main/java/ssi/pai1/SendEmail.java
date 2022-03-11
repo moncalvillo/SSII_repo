@@ -31,7 +31,7 @@ public class SendEmail {
                 return new PasswordAuthentication(attrs.getFrom(), attrs.getPassword());
             }
         });
-        session.setDebug(true);
+
         try {
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(attrs.getFrom()));

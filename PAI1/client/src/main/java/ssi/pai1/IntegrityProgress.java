@@ -108,25 +108,26 @@ public class IntegrityProgress {
         Double percentageOk = ((double) numberOfOkFiles * 100) / total;
         Double percentageNotOk = ((double) numberOfNotOkFiles * 100) / total;
 
-        System.out.println("\nAnálisis de integridad terminado, estos son los resultados: \n");
-        System.out.println(notOkFiles);
+        String message = "";
 
-        System.out.println("Ficheros analizados: " + total);
-        
-        String fileschanges = String.format("\nFicheros corruptos: %s - %.0f%%", numberOfNotOkFiles, percentageNotOk);
-        System.out.println(fileschanges);
-        System.out.println(String.format("Ficheros sanos: %s - %.0f%%", numberOfOkFiles, percentageOk));
-        
-        if(numberOfNotOkFiles>0) {
-            String message = "\nSe ha detectado una intrusion en el sistema de archivos\n";
-            message+=fileschanges;
-            message+="\nLos ficheros que han sido modificados son:\n"+notOkFiles;
+        message += "\nAnálisis de integridad terminado, estos son los resultados: \n\n";
+        message += notOkFiles + "\n";
 
-            //Los correos deben ser gmail. Poner el correo destino
-            //En caso de que falle, se debe a la caducidad de la contraseña de aplicacion. Cambiar correo origen y crear contraseña de aplicacion y activar verificacion en dos pasos.
-            //Para crear una contrase�a de aplicacion entre en https://myaccount.google.com/security?hl=es
-            //La contrase�a generada se copia en el parametro password
-            SendEmail.sendEmail("correodestino@gmail.com", "team16ssii@gmail.com", message.replace("\n", "<br>"), "Ficheros corruptos!!!", "nuazlkzwhfvfouhy");
+        message += "Ficheros analizados: " + total + "\n";
+
+        message += String.format("\nFicheros corruptos: %s - %.0f%%", numberOfNotOkFiles, percentageNotOk) + "\n";
+        message += String.format("Ficheros sanos: %s - %.0f%%", numberOfOkFiles, percentageOk) + "\n";
+        System.out.println(message);
+        if (numberOfNotOkFiles > 0) {
+            // Los correos deben ser gmail. Poner el correo destino
+            // En caso de que falle, se debe a la caducidad de la contraseña de aplicacion.
+            // Cambiar correo origen y crear contraseña de aplicacion y activar verificacion
+            // en dos pasos.
+            // Para crear una contrase�a de aplicacion entre en
+            // https://myaccount.google.com/security?hl=es
+            // La contrase�a generada se copia en el parametro password
+            SendEmail.sendEmail("bogdan.lorenzo11@gmail.com", "team16ssii@gmail.com", message.replace("\n", "<br>"),
+                    "Ficheros corruptos!!!", "nuazlkzwhfvfouhy");
 
         }
     }
