@@ -9,6 +9,9 @@ import java.security.NoSuchAlgorithmException;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -20,16 +23,40 @@ import ssii.pai1.integrity.model.Item;
 import ssii.pai1.integrity.model.Node;
 import ssii.pai1.integrity.repository.FileRepository;
 import ssii.pai1.integrity.repository.ServerRepository;
-import ssii.utils.ReportFile;
+import ssii.utils.Config;
 
 @Service
 public class ServerService {
 
-    @Autowired
+
     private ServerRepository serverRepo;
+    private FileRepository fileRepository;
+    private ReportFile reportFile;
 
     @Autowired
-    private FileRepository fileRepository;
+    public ServerService(ServerRepository serverRepository, FileRepository fileRepo, ReportFile reportFile) throws IOException{
+        System.out.println(serverRepository + " "+ fileRepo + " " + reportFile);
+        this.serverRepo = serverRepository;
+        this.fileRepository = fileRepo;
+        this.reportFile = reportFile;
+        
+        Config config = new Config(".config");
+		Long interval = config.getTime();
+		
+		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+		scheduler.scheduleWithFixedDelay(() -> {
+			try {
+				this.report();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+		}, 0, interval, TimeUnit.MILLISECONDS);
+        
+    }
 
     public boolean verify(Item entity) {
         Optional<Item> foundEntity = serverRepo.findItemByPath(entity.getPath());
@@ -74,10 +101,10 @@ public class ServerService {
         });
     }
 
-    public static void report() throws FileNotFoundException, IOException, ParseException{
+    public void report() throws FileNotFoundException, IOException, ParseException{
 
-        ReportFile repFile = new ReportFile();
-        repFile.report();
-
+        
+        reportFile.setTotal((int) fileRepository.count());
+        reportFile.report();
     }
 }

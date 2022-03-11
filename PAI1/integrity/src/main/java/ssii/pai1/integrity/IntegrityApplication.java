@@ -17,26 +17,7 @@ import ssii.utils.Config;
 public class IntegrityApplication {
 
 	public static void main(String[] args) throws IOException {
-		
-
 		SpringApplication.run(IntegrityApplication.class, args);
-
-		Config config = new Config(".config");
-		Long interval = config.getTime();
-		
-		ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-		scheduler.scheduleWithFixedDelay(() -> {
-			try {
-				ServerService.report();
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}
-		}, 0, interval, TimeUnit.MILLISECONDS);
-		
 	}
 
 }

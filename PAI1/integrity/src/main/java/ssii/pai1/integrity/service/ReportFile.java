@@ -1,4 +1,4 @@
-package ssii.utils;
+package ssii.pai1.integrity.service;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -12,6 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class ReportFile {
 
     private static final String logPath = "./src/main/resources/logs/logs.log";
@@ -24,6 +27,7 @@ public class ReportFile {
     private Double ratioOK = 0.;
     private Double ratioError = 0.;
     private Integer requests = 0;
+    private Integer analisis = 0;
     private Map<String, String> ficheros = new HashMap<String, String>();
 
     private void readLogFile() throws IOException, FileNotFoundException, ParseException {
@@ -47,11 +51,26 @@ public class ReportFile {
             }
             log = reader.readLine();
         }
-
-        this.total = filesOK + errors;
-        this.ratioOK = (this.filesOK / (double) this.total) * 100.;
-        this.ratioError = (this.errors / (double) this.total) * 100.;
+        if(total!=0){
+            this.analisis = filesOK/total;
+            this.ratioError = (ficheros.size() / (double) total) * 100.;
+            System.out.println(ficheros.size() + " " + total + " " + ratioError);
+            this.ratioOK = ((total-ficheros.size()) / (double) total) * 100.;
+        }else{
+            this.analisis = 0;
+            this.ratioError = 0.;
+            this.ratioOK = 0.;
+        }
+        
         reader.close();
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 
     public void report() throws FileNotFoundException, IOException, ParseException {
@@ -62,16 +81,17 @@ public class ReportFile {
 
         FileWriter writer = new FileWriter(file);
 
-        String content = "Informe de análisis de integridad del mes " + LocalDateTime.now().getMonth().name() + "\n";
+        String content = "Informe de analisis de integridad del mes " + LocalDateTime.now().getMonth().name() + "\n";
 
         content += "\n Logs analizados: " + requests;
         content += "\n Ficheros analizados: " + total;
-        content += "\n Ficheros verificados con exito: " + filesOK + " ( " + String.format("%.0f%%", ratioOK) + " )";
-        content += "\n Ficheros erroneos: " + errors + " ( " + String.format("%.0f%%", ratioError) + " )";
+        content += "\n Ficheros verificados con exito: " + filesOK + " ( " + String.format("%.2f%%", ratioOK) + " )";
+        content += "\n Logs erroneos: " + errors + " ( " + String.format("%.2f%%", ratioError) + " )";
+        content += "\n Numero de analisis realizados: " + analisis;
         content += "\n Lista de ficheros con errores: ";
 
         for (Entry<String, String> entry : ficheros.entrySet()) {
-            content += "\n" + entry.getKey() + "con hash " + entry.getValue();
+            content += "\n" + entry.getKey() + " con hash " + entry.getValue();
         }
 
         writer.write(content);
