@@ -14,6 +14,7 @@ import java.util.Map.Entry;
 
 import org.springframework.stereotype.Service;
 
+import ssii.utils.Config;
 import ssii.utils.SendEmail;
 
 @Service
@@ -103,7 +104,8 @@ public class ReportFile {
         //En caso de que falle, se debe a la caducidad de la contraseña de aplicacion. Cambiar correo origen y crear contraseña de aplicacion y activar verificacion en dos pasos.
         //Para crear una contrase�a de aplicacion entre en https://myaccount.google.com/security?hl=es
         //La contrase�a generada se copia en el parametro password
-        SendEmail.sendEmail("bodan.lorenzo11@gmail.com", "team16ssii@gmail.com", content.replace("\n", "<br>"), "INFORMES PERIODICOS INTEGRIDAD", "nuazlkzwhfvfouhy");
+        String emailReceiver = Config.configs.get("EMAIL_RECEIVER");
+        SendEmail.sendEmail(emailReceiver, "team16ssii@gmail.com", content.replace("\n", "<br>"), "INFORMES PERIODICOS INTEGRIDAD", "nuazlkzwhfvfouhy");
 
     }
 

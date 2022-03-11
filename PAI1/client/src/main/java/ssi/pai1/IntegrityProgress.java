@@ -126,7 +126,8 @@ public class IntegrityProgress {
             // Para crear una contrase�a de aplicacion entre en
             // https://myaccount.google.com/security?hl=es
             // La contrase�a generada se copia en el parametro password
-            SendEmail.sendEmail("bogdan.lorenzo11@gmail.com", "team16ssii@gmail.com", message.replace("\n", "<br>"),
+            String receiver = Config.configs.get("EMAIL_RECEIVER");
+            SendEmail.sendEmail(receiver, "team16ssii@gmail.com", message.replace("\n", "<br>"),
                     "Ficheros corruptos!!!", "nuazlkzwhfvfouhy");
 
         }
