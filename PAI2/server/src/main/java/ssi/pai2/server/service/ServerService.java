@@ -8,7 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import ssi.pai2.server.model.Item;
+import ssi.pai2.server.model.Message;
 import ssi.pai2.server.repository.ServerRepository;
 
 
@@ -23,7 +23,7 @@ public class ServerService {
         this.serverRepo = serverRepository;
     }
 
-    public boolean verify(Item entity) {
+    public boolean verify(Message entity) {
        return false;
     }
 
@@ -37,5 +37,12 @@ public class ServerService {
     public static String toHex(byte[] bytes) {
         BigInteger bi = new BigInteger(1, bytes);
         return String.format("%0" + (bytes.length << 1) + "X", bi);
+    }
+
+    public String createMAC(Long origen, Long destino, Double cantidad, String nonce, String challenge) throws NoSuchAlgorithmException {
+        String str = origen.toString() + destino.toString() + cantidad.toString() + nonce + challenge;
+        MessageDigest digest = MessageDigest.getInstance("SHA-256");
+        byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+        return toHex(encodedhash);
     }
 }

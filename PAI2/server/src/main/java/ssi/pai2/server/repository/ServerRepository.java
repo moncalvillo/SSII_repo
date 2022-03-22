@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import ssi.pai2.server.model.Item;
+import ssi.pai2.server.model.Message;
 
 
 @Repository
-public interface ServerRepository extends JpaRepository<Item, Long> {
+public interface ServerRepository extends JpaRepository<Message, Long> {
 
     @Query("SELECT i FROM Item i WHERE i.path = :path")
-    Optional<Item> findItemByPath(@Param("path") String path);
+    Optional<Message> findItemByPath(@Param("path") String path);
 
 }
