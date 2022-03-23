@@ -21,6 +21,11 @@ public class Client {
 
 	private static String challenge = "challenge";
 
+
+	public static String generateUUID() {
+		return UUID.randomUUID().toString();
+	}
+
 	public static String createMAC(String mensaje, String challenge) throws NoSuchAlgorithmException {
 		String str = mensaje + challenge;
 		MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -32,10 +37,6 @@ public class Client {
         BigInteger bi = new BigInteger(1, bytes);
         return String.format("%0" + (bytes.length << 1) + "X", bi);
     }
-
-	public static String generateUUID() {
-		return UUID.randomUUID().toString();
-	}
 
 	public static Boolean verificationFunction(String nonce, Map<String, String> respuesta) {
 		String mensaje = respuesta.get("mensaje");
