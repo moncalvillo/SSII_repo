@@ -7,6 +7,9 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
+
+import javax.swing.JOptionPane;
+
 import java.io.*;
 
 public class Client {
@@ -82,32 +85,29 @@ public class Client {
 
 	}
 
-	public static Boolean sendTransaction() {
+	public static void sendTransaction() {
 		try {
 			//Coger dialogo origen, destino, cantidad por dialogo
 			String nonce = generateUUID();
-			String origen = "";
-			String destino = "";
-			String cantidad = "";
+			String origen = JOptionPane.showInputDialog("Introduce una cuenta origen:");
+			String destino = JOptionPane.showInputDialog("Introduce una cuenta destino:");
+			String cantidad = JOptionPane.showInputDialog("Introduce la cantidad a transferir:");
 			String mensaje = origen + destino + cantidad + nonce;
 			String mac = createMAC(mensaje, challenge);
 			// Llamada a la API
 			Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
 			// Recibe una respuesta
 			Boolean isOk = verificationFunction(nonce, respuesta);
-			return isOk;
 
 		} // end try
 
 		// handle exception communicating with server
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		} 
+		catch (IOException ioe) {
+		 	ioe.printStackTrace();
 		}
-
-		return false;
-
 	}
 
 	public static void main(String[] args) throws IOException {
