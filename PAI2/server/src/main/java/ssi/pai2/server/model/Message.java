@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 @Entity
 @Table
@@ -15,20 +16,17 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column
     private Long id;
-
-    @Column
+    
+    @Transient
     private Long origen;
-
-    @Column
+    @Transient
     private Long destino;
-
-    @Column 
+    @Transient
     private Double cantidad;
-
-    @Column 
+    @Transient
     private String mac;
+
 
     @Column
     private String nonce;
@@ -41,9 +39,7 @@ public class Message {
         this.mac =params.get("mac");
     }
 
-    public Long getId() {
-        return id;
-    }
+
 
     public String getMac() {
         return mac;
@@ -61,9 +57,7 @@ public class Message {
         this.nonce = nonce;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
 
     public Long getOrigen() {
         return origen;

@@ -29,33 +29,32 @@ public class ServerController {
     private ServerService serverService;
 
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
-    public Map<String, String> requestVerification(HttpServletRequest req, HttpServletResponse resp, @RequestBody Map<String,String> params) {
+    public Map<String, String> requestVerification(HttpServletRequest req, @RequestBody Message entity) throws NoSuchAlgorithmException {
         Map<String, String> response = new HashMap<>();
-        Message entity = new Message(params);
-        response.put("MAC", entity.getMac());
+        String mensaje = "";
+        // Message entity = new Message(params);
         if (!entity.isValid()) {            
             String msg = "Bad parameters";
             String bodyParams = "Body: { origen = " + entity.getOrigen() + " , destino = "
                     + entity.getDestino() + " , cantidad = " + entity.getCantidad()+ " , nonce = "+ entity.getNonce() + " , mac = " + entity.getMac() + " }";
             LogLine log = new LogLine(msg, LogType.BAD_PARAMETERS, req.getServletPath(), req.getMethod(), bodyParams);
             log.writeLog();
-            response.put("error", "Bad parameters");
-        } else if (serverService.verify(entity)) {
-            String msg = "Message verified succesfully";
+            mensaje = "REQUEST_ERROR";
+        }else if(serverService.verify(entity, challenge)) {
+            String msg = "Transaction verified and succesful";
             String bodyParams = "Body: { origen = " + entity.getOrigen() + " , destino = "
                     + entity.getDestino() + " , cantidad = " + entity.getCantidad()+ " , nonce = "+ entity.getNonce() + " , mac = " + entity.getMac() + " }";
             LogLine log = new LogLine(msg, LogType.MESSAGE_OK, req.getServletPath(), req.getMethod(), bodyParams);
             log.writeLog();
+            mensaje = "OK";
            
-            try {
-                response.put("mac",
-                        serverService.createMAC(entity.getOrigen(), entity.getDestino(), entity.getCantidad(), entity.getNonce(), challenge));
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
+            
         } else {
-            response.put("error", "Unexpected error");
+            mensaje = "INTEGRATION_ERROR";
         }
+        response.put("mensaje", mensaje);
+        response.put("mac", serverService.createMAC(mensaje+entity.getNonce(), challenge));
+            
         return response;
     }
     @RequestMapping(value = "/test", method = RequestMethod.POST)
