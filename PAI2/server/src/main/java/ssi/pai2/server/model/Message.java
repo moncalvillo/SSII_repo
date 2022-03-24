@@ -39,6 +39,10 @@ public class Message {
         this.mac =params.get("mac");
     }
 
+    public Message(){
+
+    }
+
 
 
     public String getMac() {

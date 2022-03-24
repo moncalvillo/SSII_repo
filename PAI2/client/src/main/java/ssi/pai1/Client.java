@@ -43,6 +43,7 @@ public class Client {
 		String mac = "";
 		try {
 			mac = createMAC(mensaje+nonce, challenge);
+			
 		} catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		}
@@ -50,10 +51,12 @@ public class Client {
 		return responseMAC.equals(mac) && mensaje.equals("OK");
 	}
 
-	public static Map<String, String> llamar(String origen, String destino, String cantidad, String nonce, String mac) throws IOException {
+	public static Map<String, String> llamar(Long origen, Long destino, Double cantidad, String nonce, 
+												String mac) throws IOException {
 
 		URL url = new URL("http://localhost:8080/server/verification");
-		String postData = "origen=" + origen + "&destino=" + destino + "&cantidad=" + cantidad + "&nonce=" + nonce + "&mac=" + mac;
+		String postData = "origen=" + origen + "&destino=" + destino + "&cantidad=" + cantidad + "&nonce="
+								 + nonce + "&mac=" + mac;
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
@@ -90,25 +93,34 @@ public class Client {
 		try {
 			//Coger dialogo origen, destino, cantidad por dialogo
 			String nonce = generateUUID();
-			String origen = JOptionPane.showInputDialog("Introduce una cuenta origen:");
-			String destino = JOptionPane.showInputDialog("Introduce una cuenta destino:");
-			String cantidad = JOptionPane.showInputDialog("Introduce la cantidad a transferir:");
+			System.out.println(nonce);
+			// Long origen = Long.valueOf(JOptionPane.showInputDialog("Introduce una cuenta origen:"));
+			// Long destino = Long.valueOf(JOptionPane.showInputDialog("Introduce una cuenta destino:"));
+			// Double cantidad = Double.valueOf(JOptionPane.showInputDialog("Introduce la cantidad a transferir:"));
+			Long origen = 12345678L;
+			Long destino = 87654321L;
+			Double cantidad = 1234.00;
 			String mensaje = origen + destino + cantidad + nonce;
 			String mac = createMAC(mensaje, challenge);
+			System.out.println(mac);
 			// Llamada a la API
-			Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
-			// Recibe una respuesta
-			Boolean isOk = verificationFunction(nonce, respuesta);
-
+			// // Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
+			// Verificacion de la respuesta
+			// // Boolean isOk = verificationFunction(nonce, respuesta);
+			// // if(isOk) {
+			// // 	JOptionPane.showMessageDialog(null, "La integridad de la transmisión ha sido comprobada correctamente");
+			// // } else {
+			// // 	JOptionPane.showMessageDialog(null, "Ha habido un problema de integridad de la transmision");
+			// // }
 		} // end try
 
 		// handle exception communicating with server
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
-		catch (IOException ioe) {
-		 	ioe.printStackTrace();
-		}
+		// catch (IOException ioe) {
+		//  	ioe.printStackTrace();
+		// }
 	}
 
 	public static void main(String[] args) throws IOException {

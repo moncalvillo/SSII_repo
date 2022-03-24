@@ -29,10 +29,10 @@ public class ServerController {
     private ServerService serverService;
 
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
-    public Map<String, String> requestVerification(HttpServletRequest req, @RequestBody Message entity) throws NoSuchAlgorithmException {
+    public Map<String, String> requestVerification(HttpServletRequest req, @RequestBody Map<String,String> params) throws NoSuchAlgorithmException {
         Map<String, String> response = new HashMap<>();
         String mensaje = "";
-        // Message entity = new Message(params);
+        Message entity = new Message(params);
         if (!entity.isValid()) {            
             String msg = "Bad parameters";
             String bodyParams = "Body: { origen = " + entity.getOrigen() + " , destino = "
