@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -78,7 +79,10 @@ public class ReportFile {
 
         FileWriter writer = new FileWriter(file);
 
-        String content = "Informe de analisis de integridad " + LocalDateTime.now() + "\n";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+
+
+        String content = "Informe de analisis de integridad " + LocalDateTime.now().format(formatter) + "\n";
 
         content += "\n Transacciones analizadas: " + total;
         content += "\n Transacciones verificadas con exito: " + transactionsOK + " ( "
