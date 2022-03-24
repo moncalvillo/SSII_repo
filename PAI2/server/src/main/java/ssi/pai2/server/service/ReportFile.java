@@ -8,6 +8,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -48,6 +49,7 @@ public class ReportFile {
                     this.addFiles(arr[3]);
                     this.errors += 1;
                 }
+                total++;
 
             }
             log = reader.readLine();
@@ -60,6 +62,9 @@ public class ReportFile {
             this.ratioError = 0.;
             this.ratioOK = 0.;
         }
+        System.out.println("Total " + total);
+        System.out.println("OK " + transactionsOK);
+        System.out.println("Errores " + errors);
         
         reader.close();
     }
@@ -75,12 +80,12 @@ public class ReportFile {
     public void report() throws FileNotFoundException, IOException, ParseException {
         readLogFile();
 
-        File file = new File(reportPath + LocalDateTime.now().getMonth().name() + ".txt");
+        File file = new File(reportPath + ".txt");
         file = createFile(file, 0);
 
         FileWriter writer = new FileWriter(file);
-
-        String content = "Informe de analisis de integridad " + LocalDateTime.now() + "\n";
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/mm/YYYY");
+        String content = "Informe de analisis de integridad " + LocalDateTime.now().format(formatter) + "\n";
 
         content += "\n Transacciones analizadas: " + total;
         content += "\n Transacciones verificadas con exito: " + transactionsOK + " ( " + String.format("%.2f%%", ratioOK) + " )";
@@ -109,7 +114,7 @@ public class ReportFile {
             return file;
         } else {
             ++i;
-            file = new File(reportPath + LocalDateTime.now().getMonth().name() + i + ".txt");
+            file = new File(reportPath + i + ".txt");
             return createFile(file, i);
         }
     }
