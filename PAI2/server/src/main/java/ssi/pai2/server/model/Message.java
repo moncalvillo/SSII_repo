@@ -19,11 +19,11 @@ public class Message {
     private Long id;
     
     @Transient
-    private Long origen;
+    private String origen;
     @Transient
-    private Long destino;
+    private String destino;
     @Transient
-    private Double cantidad;
+    private String cantidad;
     @Transient
     private String mac;
 
@@ -32,9 +32,9 @@ public class Message {
     private String nonce;
 
     public Message(Map<String, String> params) {
-        this.origen = Long.valueOf(params.get("origen"));
-        this.destino = Long.valueOf(params.get("destino"));
-        this.cantidad= Double.valueOf(params.get("cantidad"));
+        this.origen = params.get("origen");
+        this.destino = params.get("destino");
+        this.cantidad= params.get("cantidad");
         this.nonce = params.get("nonce");
         this.mac =params.get("mac");
     }
@@ -63,35 +63,35 @@ public class Message {
 
 
 
-    public Long getOrigen() {
+    public String getOrigen() {
         return origen;
     }
 
-    public void setOrigen(Long origen) {
+    public void setOrigen(String origen) {
         this.origen = origen;
     }
 
-    public Long getDestino() {
+    public String getDestino() {
         return destino;
     }
 
-    public void setDestino(Long destino) {
+    public void setDestino(String destino) {
         this.destino = destino;
     }
 
-    public Double getCantidad() {
+    public String getCantidad() {
         return cantidad;
     }
 
-    public void setCantidad(Double cantidad) {
+    public void setCantidad(String cantidad) {
         this.cantidad = cantidad;
     }
 
     public boolean isValid() {
         boolean b = false;
-        b =  !this.cantidad.isNaN() && !this.nonce.isEmpty() && !this.nonce.isBlank() && this.nonce != null;
-        b = b && !this.mac.isEmpty() && !this.mac.isBlank() && this.mac != null;
-        b = b && this.destino.toString().length() == 8 && this.origen.toString().length() == 8 && !this.cantidad.isNaN();
+        b =  !this.cantidad.isBlank()  && !this.nonce.isBlank() && this.nonce != null;
+        b = b && !this.mac.isBlank()  && this.mac != null;
+        b = b && this.destino.toString().length() == 8 && this.origen.toString().length() == 8 && !this.cantidad.isBlank();
         return b;
     }
 

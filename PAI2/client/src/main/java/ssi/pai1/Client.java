@@ -51,18 +51,17 @@ public class Client {
 		return responseMAC.equals(mac) && mensaje.equals("OK");
 	}
 
-	public static Map<String, String> llamar(Long origen, Long destino, Double cantidad, String nonce, 
+	public static Map<String, String> llamar(String origen, String destino, String cantidad, String nonce, 
 												String mac) throws IOException {
 
 		URL url = new URL("http://localhost:8080/server/verification");
-		String postData = "origen=" + origen + "&destino=" + destino + "&cantidad=" + cantidad + "&nonce="
-								 + nonce + "&mac=" + mac;
+		String postData = String.format("{\"origen\": \"%s\",\"destino\": \"%s\",\"cantidad\": \"%s\",\"nonce\": \"%s\",\"mac\": \"%s\"}", origen, destino, cantidad, nonce, mac);
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
 		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		conn.setRequestMethod("POST");
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+		conn.setRequestProperty("Content-Type", "application/json");
 		conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
 		conn.setDoOutput(true);
 		conn.getOutputStream().write(postDataBytes);
@@ -89,38 +88,36 @@ public class Client {
 
 	}
 
-	public static void sendTransaction() {
+	public static void sendTransaction() throws IOException {
 		try {
 			//Coger dialogo origen, destino, cantidad por dialogo
 			String nonce = generateUUID();
 			System.out.println(nonce);
-			// Long origen = Long.valueOf(JOptionPane.showInputDialog("Introduce una cuenta origen:"));
-			// Long destino = Long.valueOf(JOptionPane.showInputDialog("Introduce una cuenta destino:"));
-			// Double cantidad = Double.valueOf(JOptionPane.showInputDialog("Introduce la cantidad a transferir:"));
-			Long origen = 12345678L;
-			Long destino = 87654321L;
-			Double cantidad = 1234.00;
+			String origen = JOptionPane.showInputDialog("Introduce una cuenta origen:");
+			String destino = JOptionPane.showInputDialog("Introduce una cuenta destino:");
+			String cantidad = JOptionPane.showInputDialog("Introduce la cantidad a transferir:");
+
 			String mensaje = origen + destino + cantidad + nonce;
 			String mac = createMAC(mensaje, challenge);
 			System.out.println(mac);
 			// Llamada a la API
-			// // Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
+		 Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
 			// Verificacion de la respuesta
-			// // Boolean isOk = verificationFunction(nonce, respuesta);
-			// // if(isOk) {
-			// // 	JOptionPane.showMessageDialog(null, "La integridad de la transmisión ha sido comprobada correctamente");
-			// // } else {
-			// // 	JOptionPane.showMessageDialog(null, "Ha habido un problema de integridad de la transmision");
-			// // }
+			Boolean isOk = verificationFunction(nonce, respuesta);
+			if(isOk) {
+				JOptionPane.showMessageDialog(null, "La integridad de la transmisión ha sido comprobada correctamente");
+			} else {
+				JOptionPane.showMessageDialog(null, "Ha habido un problema de integridad de la transmision");
+			}
 		} // end try
 
 		// handle exception communicating with server
 		catch (NoSuchAlgorithmException e) {
 			e.printStackTrace();
 		} 
-		// catch (IOException ioe) {
-		//  	ioe.printStackTrace();
-		// }
+		catch (IOException ioe) {
+		 	ioe.printStackTrace();
+		}
 	}
 
 	public static void main(String[] args) throws IOException {

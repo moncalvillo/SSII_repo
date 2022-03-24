@@ -52,8 +52,8 @@ public class ServerService {
 
     public boolean verify(Message entity, String challenge) throws NoSuchAlgorithmException {
         boolean b = serverRepo.findNonce(entity.getNonce()) == 0;
-        System.out.println(entity.getOrigen().toString() + entity.getDestino().toString() + entity.getCantidad().toString() + entity.getNonce().toString());
-        String str = entity.getOrigen().toString() + entity.getDestino().toString() + entity.getCantidad().toString() + entity.getNonce().toString() + challenge;
+        serverRepo.save(entity);
+        String str = entity.getOrigen().toString() + entity.getDestino().toString() + entity.getCantidad().toString() + entity.getNonce().toString();
         boolean mac = createMAC(str, challenge).equals(entity.getMac());
         return b && mac;
     }
