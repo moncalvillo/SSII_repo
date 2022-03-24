@@ -17,7 +17,6 @@ import org.springframework.stereotype.Service;
 import ssi.pai2.server.utils.Config;
 import ssi.pai2.server.utils.SendEmail;
 
-
 @Service
 public class ReportFile {
 
@@ -52,15 +51,14 @@ public class ReportFile {
             }
             log = reader.readLine();
         }
-        if(total!=0){
-            this.ratioError = (ficheros.size() / (double) total) * 100.;
-            System.out.println(ficheros.size() + " " + total + " " + ratioError);
-            this.ratioOK = ((total-ficheros.size()) / (double) total) * 100.;
-        }else{
+        total = transactionsOK + errors;
+        if (total != 0) {
+            this.ratioError = (errors / (double) total) * 100.;
+            this.ratioOK = (transactionsOK / (double) total) * 100.;
+        } else {
             this.ratioError = 0.;
             this.ratioOK = 0.;
         }
-        
         reader.close();
     }
 
@@ -83,23 +81,23 @@ public class ReportFile {
         String content = "Informe de analisis de integridad " + LocalDateTime.now() + "\n";
 
         content += "\n Transacciones analizadas: " + total;
-        content += "\n Transacciones verificadas con exito: " + transactionsOK + " ( " + String.format("%.2f%%", ratioOK) + " )";
+        content += "\n Transacciones verificadas con exito: " + transactionsOK + " ( "
+                + String.format("%.2f%%", ratioOK) + " )";
         content += "\n Transacciones erroneas: " + errors + " ( " + String.format("%.2f%%", ratioError) + " )";
-        content += "\n Lista de ficheros con errores: ";
-
-        for (Entry<String, String> entry : ficheros.entrySet()) {
-            content += "\n" + entry.getKey() + " con MAC " + entry.getValue();
-        }
 
         writer.write(content);
         writer.close();
 
-        //Los correos deben ser gmail. Poner el correo destino
-        //En caso de que falle, se debe a la caducidad de la contraseña de aplicacion. Cambiar correo origen y crear contraseña de aplicacion y activar verificacion en dos pasos.
-        //Para crear una contrase�a de aplicacion entre en https://myaccount.google.com/security?hl=es
-        //La contrase�a generada se copia en el parametro password
+        // Los correos deben ser gmail. Poner el correo destino
+        // En caso de que falle, se debe a la caducidad de la contraseña de aplicacion.
+        // Cambiar correo origen y crear contraseña de aplicacion y activar verificacion
+        // en dos pasos.
+        // Para crear una contrase�a de aplicacion entre en
+        // https://myaccount.google.com/security?hl=es
+        // La contrase�a generada se copia en el parametro password
         String emailReceiver = Config.configs.get("EMAIL_RECEIVER");
-        SendEmail.sendEmail(emailReceiver, "team16ssii@gmail.com", content.replace("\n", "<br>"), "INFORMES PERIODICOS INTEGRIDAD", "nuazlkzwhfvfouhy");
+        SendEmail.sendEmail(emailReceiver, "team16ssii@gmail.com", content.replace("\n", "<br>"),
+                "INFORMES PERIODICOS INTEGRIDAD", "nuazlkzwhfvfouhy");
 
     }
 
