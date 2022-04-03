@@ -9,6 +9,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 import java.io.*;
 
@@ -19,43 +21,42 @@ public class Client {
 	 * @throws NoSuchAlgorithmException
 	 */
 
-	private static String challenge = "challenge";
+	// private static String challenge = "challenge";
 
 
-	public static String generateUUID() {
-		return UUID.randomUUID().toString();
-	}
+	// public static String generateUUID() {
+	// 	return UUID.randomUUID().toString();
+	// }
 
-	public static String createMAC(String mensaje, String challenge) throws NoSuchAlgorithmException {
-		String str = mensaje + challenge;
-		MessageDigest digest = MessageDigest.getInstance("SHA-256");
-		byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-		return toHex(encodedhash);
-	}
+	// public static String createMAC(String mensaje, String challenge) throws NoSuchAlgorithmException {
+	// 	String str = mensaje + challenge;
+	// 	MessageDigest digest = MessageDigest.getInstance("SHA-256");
+	// 	byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+	// 	return toHex(encodedhash);
+	// }
 
-	public static String toHex(byte[] bytes) {
-        BigInteger bi = new BigInteger(1, bytes);
-        return String.format("%0" + (bytes.length << 1) + "X", bi);
-    }
+	// public static String toHex(byte[] bytes) {
+    //     BigInteger bi = new BigInteger(1, bytes);
+    //     return String.format("%0" + (bytes.length << 1) + "X", bi);
+    // }
 
-	public static Boolean verificationFunction(String nonce, Map<String, String> respuesta) {
-		String mensaje = respuesta.get("mensaje");
-		String mac = "";
-		try {
-			mac = createMAC(mensaje+nonce, challenge);
+	// public static Boolean verificationFunction(String nonce, Map<String, String> respuesta) {
+	// 	String mensaje = respuesta.get("mensaje");
+	// 	String mac = "";
+	// 	try {
+	// 		mac = createMAC(mensaje+nonce, challenge);
 			
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
-		}
-		String responseMAC = respuesta.get("mac");
-		return responseMAC.equals(mac) && mensaje.equals("OK");
-	}
+	// 	} catch (NoSuchAlgorithmException e) {
+	// 		e.printStackTrace();
+	// 	}
+	// 	String responseMAC = respuesta.get("mac");
+	// 	return responseMAC.equals(mac) && mensaje.equals("OK");
+	// }
 
-	public static Map<String, String> llamar(String origen, String destino, String cantidad, String nonce, 
-												String mac) throws IOException {
+	public static Map<String, String> llamar(String username, String password, String message) throws IOException {
 
-		URL url = new URL("http://localhost:8080/server/verification");
-		String postData = String.format("{\"origen\": \"%s\",\"destino\": \"%s\",\"cantidad\": \"%s\",\"nonce\": \"%s\",\"mac\": \"%s\"}", origen, destino, cantidad, nonce, mac);
+		URL url = new URL("https://localhost:8443/server/verification");
+		String postData = String.format("{\"username\": \"%s\",\"password\": \"%s\",\"message\": \"%s\"}", username, password, message);
 
 		byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
@@ -88,32 +89,31 @@ public class Client {
 
 	}
 
-	public static void sendTransaction() throws IOException {
+	public static void sendData() throws IOException {
 		try {
-			//Coger dialogo origen, destino, cantidad por dialogo
-			String nonce = generateUUID();
-			System.out.println(nonce);
-			String origen = JOptionPane.showInputDialog("Introduce una cuenta origen:");
-			String destino = JOptionPane.showInputDialog("Introduce una cuenta destino:");
-			String cantidad = JOptionPane.showInputDialog("Introduce la cantidad a transferir:");
+			
+			Map<String, String> respuesta = new HashMap<>();
+			JTextField username = new JTextField();
+			JPasswordField password = new JPasswordField();
+			JTextField message = new JTextField();
+			Object[] dialog = {
+				"Username:", username,
+				"Password:", password,
+				"Message:", message,
+			};
 
-			String mensaje = origen + destino + cantidad + nonce;
-			String mac = createMAC(mensaje, challenge);
-			System.out.println(mac);
-			// Llamada a la API
-		 Map<String, String> respuesta = llamar(origen, destino, cantidad, nonce, mac);
-			// Verificacion de la respuesta
-			Boolean isOk = verificationFunction(nonce, respuesta);
-			if(isOk) {
-				JOptionPane.showMessageDialog(null, "La integridad de la transmisión ha sido comprobada correctamente");
-			} else {
-				JOptionPane.showMessageDialog(null, "Ha habido un problema de integridad de la transmision");
+			int option = JOptionPane.showConfirmDialog(null, dialog, "Dialog", JOptionPane.OK_CANCEL_OPTION);
+			if (option == JOptionPane.OK_OPTION) {
+				respuesta = llamar(username.getText(), password.getSelectedText(), message.getText());
 			}
-		} // end try
+			
 
-		// handle exception communicating with server
-		catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			if(respuesta.get("200")!=null){
+				JOptionPane.showMessageDialog(null, respuesta.get("200"));
+			}else if (respuesta.get("403")!=null){
+				JOptionPane.showMessageDialog(null, respuesta.get("403"));
+			}
+			
 		} 
 		catch (IOException ioe) {
 		 	ioe.printStackTrace();
@@ -121,6 +121,6 @@ public class Client {
 	}
 
 	public static void main(String[] args) throws IOException {
-		sendTransaction();
+		sendData();
 	}
 }
