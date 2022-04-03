@@ -20,8 +20,8 @@ public class Message {
     @Column
     private String data;
 
-    public Message(Map<String, String> params) {
-        this.data = params.get("message");
+    public Message(String message) {
+        this.data = message;
 
     }
 

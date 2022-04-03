@@ -1,7 +1,7 @@
 version: '3'
 
 services:
-  pai2-mysql:
+  pai3-mysql:
     image: mysql:latest
     ports:
         - "3306:3306"
