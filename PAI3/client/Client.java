@@ -1,4 +1,5 @@
 
+
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -67,7 +68,6 @@ public class Client {
 		Map<String, String> result = new HashMap<String, String>();
 		sb.deleteCharAt(0).deleteCharAt(sb.length() - 1);
 		String response = sb.toString();
-		System.out.println("RESPONSE "+response);
 		String[] values = response.split(",");
 		for (int i = 0; i < values.length; i++) {
 			String[] value = values[i].split(":");
@@ -95,12 +95,7 @@ public class Client {
 			if (option == JOptionPane.OK_OPTION) {
 				respuesta = llamar(username.getText(), password.getText(), message.getText());
 			}
-
-			if (respuesta.get("200") != null) {
-				JOptionPane.showMessageDialog(null, respuesta.get("200"));
-			} else if (respuesta.get("403") != null) {
-				JOptionPane.showMessageDialog(null, respuesta.get("403"));
-			}
+			JOptionPane.showMessageDialog(null, respuesta.get("data"));
 
 		} catch (IOException ioe) {
 			ioe.printStackTrace();
@@ -109,5 +104,6 @@ public class Client {
 
 	public static void main(String[] args) throws IOException, KeyManagementException, NoSuchAlgorithmException {
 		sendData();
+		
 	}
 }

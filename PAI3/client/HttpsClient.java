@@ -14,7 +14,6 @@ public class HttpsClient {
         URL url = new URL("https://localhost:8443/server/verification");
         String postData = String.format("{\"username\": \"%s\",\"password\": \"%s\",\"message\": \"%s\"}", username,
                 password, message);
-System.out.println(postData);
         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
         SSLContext ctx = SSLContext.getInstance("TLS");
