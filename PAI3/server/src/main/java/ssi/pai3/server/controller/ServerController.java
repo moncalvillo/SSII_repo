@@ -42,7 +42,7 @@ public class ServerController {
             System.out.println("Message: " + messageSaved);
         } else {
             response.put("code", "401");
-            response.put("data", "Las credenciales no son correctas, el mensaje no se ha almacenado");
+            response.put("data", "Las credenciales no son correctas. El mensaje no se ha almacenado");
         }
         return response;
     }
