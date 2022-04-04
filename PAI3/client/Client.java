@@ -1,8 +1,8 @@
 
-
 import java.io.IOException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.*;
 
 import javax.swing.JOptionPane;
@@ -13,47 +13,8 @@ import java.io.*;
 
 public class Client {
 
-	/**
-	 * @param args
-	 * @throws KeyManagementException
-	 * @throws NoSuchAlgorithmException
-	 */
-
-	// private static String challenge = "challenge";
-
-	// public static String generateUUID() {
-	// return UUID.randomUUID().toString();
-	// }
-
-	// public static String createMAC(String mensaje, String challenge) throws
-	// NoSuchAlgorithmException {
-	// String str = mensaje + challenge;
-	// MessageDigest digest = MessageDigest.getInstance("SHA-256");
-	// byte[] encodedhash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
-	// return toHex(encodedhash);
-	// }
-
-	// public static String toHex(byte[] bytes) {
-	// BigInteger bi = new BigInteger(1, bytes);
-	// return String.format("%0" + (bytes.length << 1) + "X", bi);
-	// }
-
-	// public static Boolean verificationFunction(String nonce, Map<String, String>
-	// respuesta) {
-	// String mensaje = respuesta.get("mensaje");
-	// String mac = "";
-	// try {
-	// mac = createMAC(mensaje+nonce, challenge);
-
-	// } catch (NoSuchAlgorithmException e) {
-	// e.printStackTrace();
-	// }
-	// String responseMAC = respuesta.get("mac");
-	// return responseMAC.equals(mac) && mensaje.equals("OK");
-	// }
-
 	public static Map<String, String> llamar(String username, String password, String message)
-			throws IOException, KeyManagementException, NoSuchAlgorithmException {
+			throws IOException, KeyManagementException, NoSuchAlgorithmException, CertificateException {
 
 		var conn = HttpsClient.getConnection(username, password, message);
 		// Respuesta
@@ -97,13 +58,13 @@ public class Client {
 			}
 			JOptionPane.showMessageDialog(null, respuesta.get("data"));
 
-		} catch (IOException ioe) {
-			ioe.printStackTrace();
+		} catch (Exception ioe) {
+			JOptionPane.showMessageDialog(null, "Se ha detectado un certificado no valido");
 		}
 	}
 
 	public static void main(String[] args) throws IOException, KeyManagementException, NoSuchAlgorithmException {
 		sendData();
-		
+
 	}
 }

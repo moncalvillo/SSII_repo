@@ -11,7 +11,7 @@ public class CertificateTrustManager implements X509TrustManager {
 
     byte[] certificate;
 
-    public CertificateTrustManager(String certPath) throws IOException {
+    public CertificateTrustManager(String certPath) throws IOException, CertificateException {
         this.certificate = Files.readAllBytes(Path.of(certPath));
     }
 
