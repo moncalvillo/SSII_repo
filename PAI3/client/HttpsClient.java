@@ -19,7 +19,7 @@ System.out.println(postData);
 
         SSLContext ctx = SSLContext.getInstance("TLS");
 
-        ctx.init(null, new TrustManager[] { new InvalidCertificateTrustManager() }, null);
+        ctx.init(null, new TrustManager[] { new CertificateTrustManager("./certificate.cer") }, null);
 
         SSLContext.setDefault(ctx);
 
@@ -28,7 +28,7 @@ System.out.println(postData);
         conn.setRequestProperty("Content-Type", "application/json");
         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
         conn.setDoOutput(true);
-        conn.setHostnameVerifier(new InvalidCertificateHostVerifier());
+        conn.setHostnameVerifier(new CertificateHostVerifier());
         conn.getOutputStream().write(postDataBytes);
 
         return conn;
