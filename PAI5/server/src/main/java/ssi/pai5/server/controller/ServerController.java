@@ -63,7 +63,7 @@ public class ServerController {
         // Poner límite de 3 peticiones en 4 horas
         Integer nPeticiones = this.serverService.countPeticionesEn4Horas(new Date(),
                 new Date(System.currentTimeMillis() - (3600 * 1000 * 4)));
-        if (nPeticiones > 4) {
+        if (nPeticiones > 200) {
             arrayErrors.add("Limite de peticiones en 4 horas alcanzado");
         } else {
             if (params.containsKey("camas") && params.containsKey("mesas") && params.containsKey("sillas") &&
@@ -97,6 +97,7 @@ public class ServerController {
                         arrayErrors.add("No existe empleado con ID: " + params.get("idEmpleado"));
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                     arrayErrors.add("Ha habido un problema verificando la firma");
 
                 }
@@ -110,6 +111,8 @@ public class ServerController {
                 params.get("nonce"));
 
         this.serverService.savePeticion(peticion);
+        System.out.println(response);
+        System.out.println(params);
         return response;
     }
 

@@ -45,7 +45,7 @@ public class ServerService {
             FileInputStream is = new FileInputStream(file);
             keystore = KeyStore.getInstance(KeyStore.getDefaultType());
             keystore.load(is, "password".toCharArray());
-            String alias = "springboot";
+            String alias = id.toString();
 
             Certificate cert = keystore.getCertificate(alias);
 
@@ -70,7 +70,9 @@ public class ServerService {
         Signature sg = Signature.getInstance("SHA256withRSA");
         sg.initVerify(publicKey);
         sg.update(mensaje.getBytes());
-        Boolean verificacion = sg.verify(Base64.decodeBase64(params.get("firma")));
+
+
+        Boolean verificacion = sg.verify(hexStringToByteArray(params.get("firma")));
 
         return verificacion;
     }
@@ -90,6 +92,16 @@ public class ServerService {
     public static String toHex(byte[] bytes) {
         BigInteger bi = new BigInteger(1, bytes);
         return String.format("%0" + (bytes.length << 1) + "X", bi);
+    }
+
+    public static byte[] hexStringToByteArray(String s) {
+        int len = s.length();
+        byte[] data = new byte[len / 2];
+        for (int i = 0; i < len; i += 2) {
+            data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
+                                 + Character.digit(s.charAt(i+1), 16));
+        }
+        return data;
     }
 
     // public Map<String, Object> savePeticion(Map<String,String> params) {
