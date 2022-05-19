@@ -9,10 +9,12 @@ import java.security.KeyFactory;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
 import java.security.SignatureException;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.X509EncodedKeySpec;
@@ -45,30 +47,18 @@ public class ServerController {
 
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
     public Map<String, Object> requestVerification(HttpServletRequest req, @RequestBody Map<String, String> params)
-            throws InvalidKeyException, InvalidKeySpecException, SignatureException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException, CertificateException, IOException {
-
-        File file = ResourceUtils.getFile("classpath:springboot.p12");
-        FileInputStream is = new FileInputStream(file);
-        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keystore.load(is, "password".toCharArray());
-
-        String alias = "springboot";
-
-        Key key = keystore.getKey(alias, "password".toCharArray());
-        String encoded = ServerService.toHex(key.getEncoded());
-        System.out.println(encoded);
+            throws InvalidKeyException, InvalidKeySpecException, SignatureException, NoSuchAlgorithmException,
+            UnrecoverableKeyException {
 
         Map<String, Object> response = new HashMap<>();
         List<String> arrayErrors = new ArrayList<>();
         response.put("errors", arrayErrors);
 
-        Boolean verificacion = false;
         Integer camas = Integer.valueOf(params.get("camas"));
         Integer mesas = Integer.valueOf(params.get("mesas"));
         Integer sillas = Integer.valueOf(params.get("sillas"));
         Integer sillones = Integer.valueOf(params.get("sillones"));
-
-        Peticion peticion = new Peticion(camas, mesas, sillas, sillones, new Date(), verificacion, params.get("nonce"));
+        Boolean verificacion = false;
 
         // Poner límite de 3 peticiones en 4 horas
         Integer nPeticiones = this.serverService.countPeticionesEn4Horas(new Date(),
@@ -92,37 +82,34 @@ public class ServerController {
                 }
 
                 // Con el id coger el certificado
-                Certificado certificado = this.serverService.getCertificado(Long.valueOf(params.get("idEmpleado")));
-                if (certificado != null) {
-                    String clavePublica = certificado.getClavePublica();
-                    byte[] publicBytes = Base64.decodeBase64(clavePublica);
-                    X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
-                    KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-                    PublicKey pubKey = keyFactory.generatePublic(keySpec);
+                try {
+                    PublicKey publicKey = this.serverService.getPublicKey(Long.valueOf(params.get("idEmpleado")));
+                    if (publicKey != null) {
+                        verificacion = this.serverService.verifyMessage(params);
 
-                    String mensaje = params.get("camas") + params.get("mesas") + params.get("sillas")
-                            + params.get("sillones") + params.get("idEmpleado") + params.get("nonce");
-                    Signature sg = Signature.getInstance("SHA256withRSA");
-                    sg.initVerify(pubKey);
-                    sg.update(mensaje.getBytes());
-                    verificacion = sg.verify(params.get("firma").getBytes());
+                        if (!verificacion) {
+                            arrayErrors.add("La firma no es correcta");
+                        }
 
-                    if (!verificacion) {
-                        arrayErrors.add("La firma no es correcta");
+                        response.put("ok", verificacion);
+
+                    } else {
+                        arrayErrors.add("No existe empleado con ID: " + params.get("idEmpleado"));
                     }
+                } catch (Exception e) {
+                    arrayErrors.add("Ha habido un problema verificando la firma");
 
-                    response.put("ok", verificacion);
-
-                } else {
-                    arrayErrors.add("No existe empleado con ID: " + params.get("idEmpleado"));
                 }
 
             } else {
                 arrayErrors.add("Entrada invalida");
             }
-            this.serverService.savePeticion(peticion);
-        }
 
+        }
+        Peticion peticion = new Peticion(camas, mesas, sillas, sillones, new Date(), verificacion,
+                params.get("nonce"));
+
+        this.serverService.savePeticion(peticion);
         return response;
     }
 
