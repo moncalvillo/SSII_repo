@@ -19,6 +19,7 @@ import java.security.cert.CertificateException;
 import java.util.Date;
 import java.util.Map;
 
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ResourceUtils;
@@ -69,7 +70,7 @@ public class ServerService {
         Signature sg = Signature.getInstance("SHA256withRSA");
         sg.initVerify(publicKey);
         sg.update(mensaje.getBytes());
-        Boolean verificacion = sg.verify(params.get("firma").getBytes());
+        Boolean verificacion = sg.verify(Base64.decodeBase64(params.get("firma")));
 
         return verificacion;
     }
