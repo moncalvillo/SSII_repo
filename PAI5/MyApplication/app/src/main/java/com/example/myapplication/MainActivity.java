@@ -7,18 +7,18 @@ import android.content.res.Resources;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import java.io.IOException;
 import java.net.*;
@@ -100,6 +100,7 @@ public class MainActivity extends AppCompatActivity {
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
                                 // Catch ok button and send information
+                                @RequiresApi(api = Build.VERSION_CODES.O)
                                 public void onClick(DialogInterface dialog, int whichButton) {
 
                                     SecureRandom nonce = new SecureRandom();
@@ -107,15 +108,13 @@ public class MainActivity extends AppCompatActivity {
                                     byte[] firma = null;
                                     try{
                                         // 1. Extraer los datos de la vista
-                                        KeyPairGenerator kgen = KeyPairGenerator.getInstance("RSA");
-                                        kgen.initialize(2048);
-                                        KeyPair keys = kgen.generateKeyPair();
+
                                         String message = numCamas + numMesas + numSillas +  numSillones +
                                                 numEmpleado + nonce.toString();
                                         // 2. Firmar los datos
 
                                         Signature sg = Signature.getInstance("SHA256withRSA");
-                                        sg.initSign(keys.getPrivate());
+                                        sg.initSign((PrivateKey) getPrivateKey(numEmpleado));
                                         sg.update(message.getBytes());
 
                                         firma = sg.sign();
@@ -125,6 +124,10 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     } catch (InvalidKeyException e) {
                                         e.printStackTrace();
+                                    } catch (CertificateException e) {
+                                        e.printStackTrace();
+                                    } catch (KeyStoreException e) {
+                                        e.printStackTrace();
                                     }
 
 
@@ -132,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
                                     try {
                                         URL peticion = new URL(url);
                                         String postData = String.format("{\"camas\": \"%s\",\"sillas\": \"%s\",\"sillones\": \"%s\",\"mesas\": \"%s\",\"empleado\": \"%s\",\"nonce\": \"%s\",\"firma\": \"%s\"}",
-                                                numCamas, numSillas, numSillones, numMesas, numEmpleado, nonce, firma);
+                                                numCamas, numSillas, numSillones, numMesas, numEmpleado, nonce, Base64.getEncoder().encode(firma));
 
                                         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
 
@@ -197,4 +200,36 @@ public class MainActivity extends AppCompatActivity {
         return list.stream().filter(x -> !x.equals("")).map(x -> Integer.valueOf(x)).filter(x -> x < 0 || x > 300).count() > 0;
 
     }
+
+    public Key getPrivateKey(String id) throws CertificateException, KeyStoreException {
+        KeyStore keystore;
+        try {
+            keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+            keystore.load(readFile(), "password".toCharArray());
+
+            // Get public key
+            Key key = keystore.getKey(id, "password".toCharArray());
+            return key;
+        } catch (KeyStoreException | NoSuchAlgorithmException | IOException | UnrecoverableKeyException e) {
+            e.printStackTrace();
+        }
+        return null;
+
+    }
+
+    public InputStream readFile(){
+        BufferedReader reader = null;
+        try {
+            return  getAssets().open("springboot.p12");
+
+            // do reading, usually loop until end of file reading
+
+        } catch (IOException e) {
+            //log the
+
+        }
+        return null;
+    }
+
+
 }
