@@ -63,7 +63,7 @@ public class ServerController {
         // Poner límite de 3 peticiones en 4 horas
         Integer nPeticiones = this.serverService.countPeticionesEn4Horas(new Date(),
                 new Date(System.currentTimeMillis() - (3600 * 1000 * 4)));
-        if (nPeticiones > 200) {
+        if (nPeticiones > 3) {
             arrayErrors.add("Limite de peticiones en 4 horas alcanzado");
         } else {
             if (params.containsKey("camas") && params.containsKey("mesas") && params.containsKey("sillas") &&

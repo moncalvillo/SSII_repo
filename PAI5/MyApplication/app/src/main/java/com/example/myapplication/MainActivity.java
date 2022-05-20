@@ -100,41 +100,7 @@ public class MainActivity extends AppCompatActivity {
         numCamas = camas.getText().toString();
         numEmpleado = num.getText().toString();
 
-/*
-        TrustManager[] trustAllCerts = new TrustManager[]{
-                new X509ExtendedTrustManager() {
-                    public void checkClientTrusted(X509Certificate[] chain, String authType, Socket socket) {}
-                    public void checkServerTrusted(X509Certificate[] chain, String authType, Socket socket) {}
-                    public void checkClientTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
-                    public void checkServerTrusted(X509Certificate[] chain, String authType, SSLEngine engine) {}
-                    public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                    public void checkServerTrusted(X509Certificate[] paramArrayOfX509Certificate, String paramString) {
 
-                        for (X509Certificate serverCert : paramArrayOfX509Certificate) {
-                            System.out.println("CERTIICATE: " + toHex( serverCert.getSignature()));
-                            Boolean isTrustedCertificate = Arrays.equals(this.certificate, serverCert.getEncoded());
-                            if (!isTrustedCertificate) {
-                                throw new CertificateException("Certificate is not trusted");
-                            }
-
-                        }
-                    }
-                    public X509Certificate[] getAcceptedIssuers() {
-                        return null;
-                    }
-                }
-        };
-
-        KeyStore keyStore = KeyStore.getInstance("AndroidKeyStore");
-        keyStore.load(null);
-        KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
-        keyManagerFactory.init(keyStore,null);
-
-        SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(keyManagerFactory.getKeyManagers(), trustAllCerts, null);
-
-        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
-*/
         System.out.println(numCamas  + numSillas + numSillones + numMesas  + numEmpleado );
         if (numSillas.isEmpty() && numSillones.isEmpty() && numMesas.isEmpty() && numCamas.isEmpty()) {
             // Mostramos un mensaje emergente;
@@ -227,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                         if(!result.get("errors").equals("[]")){
-                                            Toast.makeText(MainActivity.this, "Ha habido un error", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(MainActivity.this, result.get("errors"), Toast.LENGTH_SHORT).show();
                                             Intent i = getBaseContext().getPackageManager()
                                                     .getLaunchIntentForPackage( getBaseContext().getPackageName() );
                                             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -268,7 +234,8 @@ public class MainActivity extends AppCompatActivity {
         if(numEmpleado.equals("1")){
             return kf.generatePrivate(new PKCS8EncodedKeySpec(sk1));
         }
-        return null;
+        // If added more employers, add its keyfactories
+        return kf.generatePrivate(new PKCS8EncodedKeySpec(sk1));
     }
 
     public static String toHex(byte[] bytes) {
