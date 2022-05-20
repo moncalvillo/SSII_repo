@@ -1,23 +1,7 @@
 package ssi.pai5.server.controller;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.security.InvalidKeyException;
-import java.security.Key;
-import java.security.KeyFactory;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.security.Signature;
-import java.security.SignatureException;
-import java.security.UnrecoverableKeyException;
-import java.security.cert.Certificate;
-import java.security.cert.CertificateException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -26,15 +10,12 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import ssi.pai5.server.model.Certificado;
 import ssi.pai5.server.model.Peticion;
 import ssi.pai5.server.service.ServerService;
 
@@ -46,9 +27,7 @@ public class ServerController {
     private ServerService serverService;
 
     @RequestMapping(value = "/verification", method = RequestMethod.POST)
-    public Map<String, Object> requestVerification(HttpServletRequest req, @RequestBody Map<String, String> params)
-            throws InvalidKeyException, InvalidKeySpecException, SignatureException, NoSuchAlgorithmException,
-            UnrecoverableKeyException {
+    public Map<String, Object> requestVerification(HttpServletRequest req, @RequestBody Map<String, String> params) {
 
         Map<String, Object> response = new HashMap<>();
         List<String> arrayErrors = new ArrayList<>();
@@ -97,7 +76,6 @@ public class ServerController {
                         arrayErrors.add("No existe empleado con ID: " + params.get("idEmpleado"));
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
                     arrayErrors.add("Ha habido un problema verificando la firma");
 
                 }
@@ -111,8 +89,8 @@ public class ServerController {
                 params.get("nonce"));
 
         this.serverService.savePeticion(peticion);
-        System.out.println(response);
-        System.out.println(params);
+        serverService.saveTendenciaMensualToFile();
+        System.out.println(peticion);
         return response;
     }
 

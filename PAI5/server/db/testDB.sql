@@ -1,11 +1,8 @@
 PRAGMA foreign_keys=OFF;
 BEGIN TRANSACTION;
-CREATE TABLE certificado (id bigint not null, clave_publica varchar, primary key (id));
-CREATE TABLE hibernate_sequence (next_val bigint);
-INSERT INTO hibernate_sequence VALUES(12);
-INSERT INTO hibernate_sequence VALUES(12);
-INSERT INTO hibernate_sequence VALUES(12);
-INSERT INTO hibernate_sequence VALUES(12);
+
+INSERT INTO hibernate_sequence VALUES(20);
+
 DROP TABLE peticion;
 CREATE TABLE peticion (id bigint not null, camas integer, mesas integer,  sillas integer, sillones integer, timestamp timestamp, verificacion integer, nonce varchar, primary key (id));
 INSERT INTO peticion VALUES(1,10,15,5,20,'2020-11-15 15:30:14.332',1,'274911e2-cb4f-41fe-819b-c211832e5452');

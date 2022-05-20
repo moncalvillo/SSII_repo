@@ -1,4 +1,5 @@
 package ssi.pai5.server.model;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -6,6 +7,7 @@ import java.util.Date;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,7 +18,9 @@ import javax.persistence.Id;
 public class Peticion {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Basic
     private Long id;
 
     @Column
@@ -40,6 +44,10 @@ public class Peticion {
 
     @Column
     private String nonce;
+
+    public Peticion() {
+
+    }
 
     public Peticion(Integer camas, Integer mesas, Integer sillas, Integer sillones, Date timestamp,
             Boolean verificacion, String nonce) {

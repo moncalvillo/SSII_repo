@@ -5,6 +5,9 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigInteger;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -16,8 +19,16 @@ import java.security.Signature;
 import java.security.SignatureException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +37,9 @@ import org.springframework.util.ResourceUtils;
 
 import ssi.pai5.server.model.Certificado;
 import ssi.pai5.server.model.Peticion;
+import ssi.pai5.server.model.RatioVerificacion;
+import ssi.pai5.server.model.Tendencia;
+import ssi.pai5.server.model.TendenciaMensual;
 import ssi.pai5.server.repository.CertificadoRepository;
 import ssi.pai5.server.repository.PeticionRepository;
 
@@ -71,7 +85,6 @@ public class ServerService {
         sg.initVerify(publicKey);
         sg.update(mensaje.getBytes());
 
-
         Boolean verificacion = sg.verify(hexStringToByteArray(params.get("firma")));
 
         return verificacion;
@@ -89,6 +102,121 @@ public class ServerService {
         return this.peticionRepository.countPeticionesEn4Horas(start, end);
     }
 
+    private Map<Integer, Map<Integer, List<Peticion>>> groupByMonthAndYear(List<Peticion> peticiones) {
+        Map<Integer, Map<Integer, List<Peticion>>> peticionesByYearAndMonth = new HashMap<>();
+
+        for (Peticion peticion : peticiones) {
+            Date date = peticion.getTimestamp();
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            Integer year = calendar.get(Calendar.YEAR);
+            Integer month = calendar.get(Calendar.MONTH);
+
+            if (!peticionesByYearAndMonth.containsKey(year)) {
+                peticionesByYearAndMonth.put(year, new HashMap<>());
+            }
+
+            Map<Integer, List<Peticion>> peticionesByMonth = peticionesByYearAndMonth.get(year);
+
+            if (!peticionesByMonth.containsKey(month)) {
+                peticionesByMonth.put(month, new ArrayList<>());
+            }
+
+            List<Peticion> peticionesAgrupadas = peticionesByMonth.get(month);
+            peticionesAgrupadas.add(peticion);
+
+        }
+
+        return peticionesByYearAndMonth;
+    }
+
+    private List<RatioVerificacion> calculateRatioVerifications(
+            Map<Integer, Map<Integer, List<Peticion>>> peticionesGroupedByYearAndMonth) {
+
+        List<RatioVerificacion> ratioVerificaciones = new ArrayList<>();
+
+        for (Entry<Integer, Map<Integer, List<Peticion>>> peticionesByYear : peticionesGroupedByYearAndMonth
+                .entrySet()) {
+            Integer year = peticionesByYear.getKey();
+
+            for (Entry<Integer, List<Peticion>> peticionesByMonth : peticionesByYear.getValue().entrySet()) {
+                Integer month = peticionesByMonth.getKey();
+                List<Peticion> peticiones = peticionesByMonth.getValue();
+
+                Double verificacionesPositivas = (double) peticiones.stream()
+                        .filter(peticion -> peticion.getVerificacion())
+                        .count();
+                Double ratio = verificacionesPositivas / peticiones.size();
+
+                RatioVerificacion ratioVerificacion = new RatioVerificacion(year, month, ratio);
+                ratioVerificaciones.add(ratioVerificacion);
+
+            }
+        }
+        return ratioVerificaciones;
+
+    }
+
+    private List<TendenciaMensual> calculateTendenciaMensual(List<RatioVerificacion> ratioVerificaciones) {
+        List<TendenciaMensual> tendenciaMensuales = new ArrayList<>();
+        ratioVerificaciones.sort((x, y) -> {
+            Integer xYear = x.getYear();
+            Integer yYear = y.getYear();
+
+            int yearComp = xYear.compareTo(yYear);
+
+            if (yearComp != 0) {
+                return yearComp;
+            }
+
+            Integer xMonth = x.getMonth();
+            Integer yMonth = y.getMonth();
+
+            return xMonth.compareTo(yMonth);
+
+        });
+        for (int i = 0; i < ratioVerificaciones.size(); i++) {
+            RatioVerificacion ratioVerificacion = ratioVerificaciones.get(i);
+            Tendencia tendencia;
+            if (i < 2) {
+                tendencia = Tendencia.NULA;
+            } else {
+                Double p3 = ratioVerificaciones.get(i).getRatio();
+                Double p2 = ratioVerificaciones.get(i - 1).getRatio();
+                Double p1 = ratioVerificaciones.get(i - 2).getRatio();
+                if ((p3 > p1 && p3 > p2) || (p3 < p1 && p3 == p2) || (p3.equals(p1) && p3 > p2)) {
+                    tendencia = Tendencia.POSITIVA;
+                } else if (p3 < p1 || p3 < p2) {
+                    tendencia = Tendencia.NEGATIVA;
+                } else {
+                    tendencia = Tendencia.NULA;
+                }
+
+            }
+
+            TendenciaMensual tendenciaMensual = new TendenciaMensual(ratioVerificacion, tendencia);
+            tendenciaMensuales.add(tendenciaMensual);
+        }
+
+        return tendenciaMensuales;
+    }
+
+    public void saveTendenciaMensualToFile() {
+        var peticiones = this.peticionRepository.findAll();
+        var peticionesGroupedByYearAndMonth = groupByMonthAndYear(peticiones);
+        var ratioVerificacions = calculateRatioVerifications(peticionesGroupedByYearAndMonth);
+        var tendenciaMensuals = calculateTendenciaMensual(ratioVerificacions);
+        String lines = tendenciaMensuals.stream().map(x -> x.toString()).collect(Collectors.joining("\n"));
+        Path output = Paths.get("informe.txt");
+        try {
+            Files.write(output, lines.getBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public static String toHex(byte[] bytes) {
         BigInteger bi = new BigInteger(1, bytes);
         return String.format("%0" + (bytes.length << 1) + "X", bi);
@@ -99,84 +227,9 @@ public class ServerService {
         byte[] data = new byte[len / 2];
         for (int i = 0; i < len; i += 2) {
             data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4)
-                                 + Character.digit(s.charAt(i+1), 16));
+                    + Character.digit(s.charAt(i + 1), 16));
         }
         return data;
     }
 
-    // public Map<String, Object> savePeticion(Map<String,String> params) {
-    // Map<String, Object> response = new HashMap<>();
-    // List<String> arrayErrors = new ArrayList<>();
-    // response.put("errors", arrayErrors);
-
-    // Boolean verificacion = false;
-    // Integer camas = Integer.valueOf(params.get("camas"));
-    // Integer mesas = Integer.valueOf(params.get("mesas"));
-    // Integer sillas = Integer.valueOf(params.get("sillas"));
-    // Integer sillones = Integer.valueOf(params.get("sillones"));
-
-    // Peticion peticion = new Peticion(camas, mesas, sillas, sillones, new Date(),
-    // verificacion, params.get("nonce"));
-
-    // // Poner límite de 3 peticiones en 4 horas
-    // Integer nPeticiones = this.peticionRepository.countPeticionesEn4Horas(new
-    // Date(),
-    // new Date(System.currentTimeMillis() - (3600 * 1000 * 4)));
-    // if (nPeticiones > 4) {
-    // arrayErrors.add("Limite de peticiones en 4 horas alcanzado");
-    // } else {
-    // if (params.containsKey("camas") && params.containsKey("mesas") &&
-    // params.containsKey("sillas") &&
-    // params.containsKey("sillones") && params.containsKey("idEmpleado") &&
-    // params.containsKey("firma")
-    // && params.containsKey("nonce")) {
-
-    // // Validación de mensaje (entre 0 y 300)
-    // if (camas < 0 || camas > 300 || mesas < 0 || mesas > 300 || sillas < 0 ||
-    // sillas > 300 || sillones < 0
-    // || sillones > 300) {
-    // arrayErrors.add("Los campos debes estar entre 0 y 300");
-    // }
-
-    // // Comprobar nonce
-    // if (this.peticionRepository.findNonce(params.get("nonce")) > 0) {
-    // arrayErrors.add("Nonce repetido");
-    // }
-
-    // // Con el id coger el certificado
-    // Certificado certificado =
-    // this.certificadoRepository.findById(Long.valueOf(params.get("idEmpleado"))).orElse(null);
-    // if (certificado != null) {
-    // String clavePublica = certificado.getClavePublica();
-    // byte[] publicBytes = Base64.decodeBase64(clavePublica);
-    // X509EncodedKeySpec keySpec = new X509EncodedKeySpec(publicBytes);
-    // KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-    // PublicKey pubKey = keyFactory.generatePublic(keySpec);
-
-    // String mensaje = params.get("camas") + params.get("mesas") +
-    // params.get("sillas")
-    // + params.get("sillones") + params.get("idEmpleado") + params.get("nonce");
-    // Signature sg = Signature.getInstance("SHA256withRSA");
-    // sg.initVerify(pubKey);
-    // sg.update(mensaje.getBytes());
-    // verificacion = sg.verify(params.get("firma").getBytes());
-
-    // if (!verificacion) {
-    // arrayErrors.add("La firma no es correcta");
-    // }
-
-    // response.put("ok", verificacion);
-
-    // } else {
-    // arrayErrors.add("No existe empleado con ID: " + params.get("idEmpleado"));
-    // }
-
-    // } else {
-    // arrayErrors.add("Entrada invalida");
-    // }
-    // this.serverService.savePeticion(peticion);
-    // }
-
-    // return response;
-    // }
 }
