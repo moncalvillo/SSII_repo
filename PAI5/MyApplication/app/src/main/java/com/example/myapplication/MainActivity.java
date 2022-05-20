@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         numEmpleado = num.getText().toString();
 
 
-        System.out.println(numCamas  + numSillas + numSillones + numMesas  + numEmpleado );
         if (numSillas.isEmpty() && numSillones.isEmpty() && numMesas.isEmpty() && numCamas.isEmpty()) {
             // Mostramos un mensaje emergente;
             Toast.makeText(getApplicationContext(), "Solicita algún material", Toast.LENGTH_SHORT).show();
@@ -137,14 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
                                         firma = sg.sign();
 
-                                        String hex = toHex(firma);
-                                        byte[] byt = hexStringToByteArray(hex);
-                                        for(int i= 0; i<byt.length; i++){
-                                            if(byt[i] != firma[i]){
-                                                System.out.println("FALLA");
-                                                break;
-                                            }
-                                        }
                                     } catch (Exception e) {
                                         e.printStackTrace();
                                     }
@@ -156,22 +147,13 @@ public class MainActivity extends AppCompatActivity {
                                         URL peticion = new URL(url);
                                         String postData = String.format("{\"camas\": \"%s\",\"sillas\": \"%s\",\"sillones\": \"%s\",\"mesas\": \"%s\",\"idEmpleado\": \"%s\",\"nonce\": \"%s\",\"firma\": \"%s\"}",
                                                 numCamas, numSillas, numSillones, numMesas, numEmpleado, nonce, toHex(firma));
-
-
                                         byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
                                         conn = (HttpURLConnection) peticion.openConnection();
                                         conn.setRequestMethod("POST");
                                         conn.setRequestProperty("Content-Type", "application/json");
                                         conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
                                         conn.setDoOutput(true);
-                                        System.out.println(new String(postDataBytes, Charset.defaultCharset()));
-                                        //conn.getOutputStream().write(postDataBytes);
-
-                                        DataOutputStream d = new DataOutputStream(conn.getOutputStream());
-                                        d.write(postDataBytes);
-                                        d.flush();
-                                        d.close();
+                                        conn.getOutputStream().write(postDataBytes);
 
                                         Map<String, String> result = new HashMap<String, String>();
                                         // Respuesta
@@ -181,7 +163,6 @@ public class MainActivity extends AppCompatActivity {
                                             for (int c = in.read(); c != -1; c = in.read()) {
                                                 sb.append((char) c);
                                             }
-                                            // System.out.println("Respuesta del servidor: " + sb);
 
                                             // Tratamiento de datos
                                             sb.deleteCharAt(0).deleteCharAt(sb.length() - 1);
